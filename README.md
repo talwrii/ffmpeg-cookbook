@@ -28,7 +28,7 @@ This specifies that the format of the input is a `libavformat` filter ("LibAVFIl
 Notice how parameters for the source filter `sine` are specified by `=` and then separted by `=`
 
 ## Write a sine wave to a file
-<a name="write_sine" />
+<a name="write_sine"></a>
 ```
 ffmpeg -filter_complex 'sine=frequency=256:duration=10' sine.wav
 ```
