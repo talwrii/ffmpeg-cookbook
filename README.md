@@ -85,5 +85,15 @@ concat AVOptions:
    v                 <int>        ..FV....... specify the number of video streams (from 0 to INT_MAX) (default 1)
    a                 <int>        ..F.A...... specify the number of audio streams (from 0 to INT_MAX) (default 0)
    unsafe            <boolean>    ..FVA...... enable unsafe mode (default false)
-
 ```
+
+# About me
+I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian). 
+
+If you liked this your might to:
+
+1. Have a look at some of [my other productivity tools](https://readwithai.substack.com/p/my-productivity-tools); or
+2. Read [my review of note taking in Obsidian](https://readwithai.substack.com/p/note-taking-with-obsidian-much-of).
+
+You can follow me on [X](https://x.com/readwithai) where I write about productivity tools like this besides other things, or my [blog](https://readwithai.substack.com/) where I write more about reading and research.
+
