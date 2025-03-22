@@ -1,4 +1,4 @@
-# ffmpeg cookbook
+# An ffmpeg Cookbook
 This is a cookbook for the audio-video command line tool, [ffmpeg](https://www.ffmpeg.org/), because I found it difficult to work out how ffmpeg worked when I first used it.
 
 This cookbook tries to build up an understanding of ffmpeg filters through examples. If you can't adapt an example you may be able to start learning on an earlier example.
