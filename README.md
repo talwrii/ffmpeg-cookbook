@@ -2,9 +2,10 @@
 *@readwithai - [X](https://x.com/readwithai) -[blog](https://readwithai.substack.com/)*
 
 This is a cookbook for the audio-video command line-tool, [ffmpeg](https://www.ffmpeg.org/).
-I created it because I found working out what ffmpeg was doing from snippets lightly too difficult to understand.
+I created it because I found working out what ffmpeg was doing from snippets slightly too difficult to understand.
 
 This cookbook tries to build up an understanding of ffmpeg filters through examples.
+
 I try to do a few things:
 
 1. Every example can be runs. It is neither abstract, nor does it need you to provide you with your own data
