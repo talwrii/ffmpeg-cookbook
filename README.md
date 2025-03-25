@@ -159,7 +159,7 @@ ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
 
 First we create a video which shows the timestamp each frame and is ten seconds long. We then apply the `trim` filter to limit this to 10s
 
-## Turn a static image into a 5s video
+## Turn a static image into a five second image video
 <a name="static-image"> </a>
 
 ```
