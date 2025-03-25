@@ -182,7 +182,7 @@ First we create a static image with the word hello and a video which fades from 
 # About me
 I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
 
-If you liked this your might to:
+If you liked this your might like to:
 
 1. Have a look at some of [my other productivity tools](https://readwithai.substack.com/p/my-productivity-tools); or
 2. Read [my review of note taking in Obsidian](https://readwithai.substack.com/p/note-taking-with-obsidian-much-of).
