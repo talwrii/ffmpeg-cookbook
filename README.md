@@ -151,7 +151,7 @@ ffplay -f lavfi -i  'color=color=white, drawtext=text=%{pts}'
 This uses the [drawtext filter's](https://ffmpeg.org/ffmpeg-filters.html#drawtext-1) expression language to show the current timestamp in each frame. `%{pts}` is [expanded](https://ffmpeg.org/ffmpeg-filters.html#Text-expansion) in each frame to the number of seconds into the frame.
 
 
-## Triming a video to five seconds duration
+## Trim a video to five seconds duration
 ```
 ffmpeg -filter_complex 'color=color=white, drawtext=text=%{pts}, trim=duration=10s' count-to-ten.mp4
 ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
@@ -159,7 +159,7 @@ ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
 
 First we create a video which shows the timestamp each frame and is ten seconds long. We then apply the `trim` filter to limit this to 10s
 
-## Turn a static image into a five second image video
+## Turn a static image into a five second video of the image
 <a name="static-image"> </a>
 
 ```
@@ -169,7 +169,7 @@ ffmpeg -i static.png  -filter_complex 'nullsrc=duration=5s [vid]; [vid][0]overla
 
 First we [create an image](#image) using the `-vframe` option. We then create a 5 second empty video using the `nullsrc` filter and overlay the static image on it.
 
-## Adding a static image to the beginning of a video
+## Add a static introduction image to the beginning of a video
 
 ```
 ffmpeg -filter_complex 'color=color=white, drawtext=text=hello:fontsize=40' -v:frame 1 static.png
