@@ -160,20 +160,25 @@ ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
 First we create a video which shows the timestamp each frame and is ten seconds long. We then apply the `trim` filter to limit this to 10s
 
 ## Turn a static image into a 5s video
+<a name="static-image"> </a>
 
 ```
 ffmpeg -filter_complex 'color=color=white, drawtext=text=hello:fontsize=40' -v:frame 1 static.png
 ffmpeg -i static.png  -filter_complex 'nullsrc=duration=5s [vid]; [vid][0]overlay' out.mp4
 ```
 
-First we [create an image](#image) using the `-vframe` option.
+First we [create an image](#image) using the `-vframe` option. We then create a 5 second empty video using the `nullsrc` filter and overlay the static image on it.
 
 ## Adding a static image to the beginning of a video
+
 ```
 ffmpeg -filter_complex 'color=color=white, drawtext=text=hello:fontsize=40' -v:frame 1 static.png
 ffmpeg -filter_complex 'color=color=red:duration=5s [red]; color=color=green:duration=5s [green]; [red][green]xfade=duration=5s' video.mp4
-ffmpeg  -i static.png -i video.mp4 -filter_complex 'nullsource=duration=2s, [1]overlay=duration=2,[2]concat'
+ffmpeg  -i static.png -i video.mp4 -filter_complex 'nullsrc=duration=2s, [0]overlay [intro]; [intro][1]concat' with-title.mp4
 ```
+
+First we create a static image with the word hello and a video which fades from red to green. Then we combine the two [overlaying the static image](#static-image) on a 2 second video and call it intro. This is concatenated with a video.
+
 # About me
 I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
 
