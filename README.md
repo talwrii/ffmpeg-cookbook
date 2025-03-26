@@ -1,5 +1,5 @@
 # ffmpeg cookbook
-*@readwithai - [X](https://x.com/readwithai) -[blog](https://readwithai.substack.com/)*
+*@readwithai - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/)*
 
 This is a cookbook for the audio-video command-line tool, [ffmpeg](https://www.ffmpeg.org/).
 I created it because I found working out what ffmpeg was doing from snippets slightly too difficult.
