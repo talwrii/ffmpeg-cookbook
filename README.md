@@ -3,14 +3,9 @@
 
 This is a beginner's cookbook for the audio-video command-line tool, [ffmpeg](https://www.ffmpeg.org/). It build the readers familiarity with ffmpeg features through examples rather than dry documentation. I created it because I found working out what ffmpeg was doing from snippets slightly too difficult.
 
-I'm trying to do a few things with this cookbook:
+ffmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features they become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
 
-1. Every example can be run. Examples are neither abstract, nor does you need you to provide your own data
-1. Examples link to earlier examples which do similar (but simpler) things. If the you cannot adapt an example to a use case, you can find something more basic which you can start working on. We prefer to link to examples rather than concrete.
-1. Where possible, examples link to documentation
-1. Examples are, initially, ordered in terms of complexity rather than based on the task you are trying to perform
-
-There is an [index of features](#features) which goes through different ffmpeg features linked to recipes. `ffmpeg` has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
+This file provides is an [index of features](#features) which goes through different ffmpeg features linked to recipes. `ffmpeg` has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
 
 # Attribution
 Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in ffmpeg.
@@ -24,7 +19,8 @@ The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly 
 
 
 # Introduction
-This introduction tries to cover a broad range of tasks and features building up an understanding of ffmpeg it is not complete.
+`ffmpeg` has a number of core features that when understood help you do a range on things. This introduction tries to cover most of these core featues.
+
 
 ## Create 10 seconds of silence
 <a name="source"> </a>
@@ -32,7 +28,7 @@ This introduction tries to cover a broad range of tasks and features building up
 <a name="output-stream"> </a>
 
 
-```
+```bash
 ffmpeg -filter_complex 'anullsrc=duration=10s [out]' -map '[out]' -ac 1 silence.wav
 ```
 
@@ -47,9 +43,9 @@ You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 
 <a name="sine-play"> </a>
 <a name="source-filter"> </a>
 <a name="lavfi"> </a>
+<a name="colons"> </a>
 
-
-```
+```bash
 ffplay -f lavfi 'sine=frequency=256:duration=10'
 ```
 
@@ -59,10 +55,10 @@ The parameters for the source filter, [`sine`](https://ffmpeg.org/ffmpeg-filters
 
 You do not need to use ffplay to play instead you can [use the xv output](#xv)  which xan be useful if you have multiple filters.
 
-See also: [ffplay vs ffmpeg](#play), [xv output](#xv)
+See also: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
 ## Write a sine wave to a file
 <a name="write_sine"></a>
-```
+```bash
 ffmpeg -filter_complex 'sine=frequency=256:duration=10' sine.wav
 ffplay sine.wav
 ```
@@ -71,27 +67,30 @@ Note how this compares to the previous example. This shows how you can convert b
 
 ## Combine two sine waves into a chord.
 <a name="labels"> </a>
-
-```
+```bash
 ffplay -f lavfi 'sine=frequency=256:duration=10 [one]; sine=frequency=512:duration=5 [two]; [one][two]amix'
 ```
 This creates two streams, `[one]` and `[two]`, which are then mixed together into the output stream by `amix`. `amix` which takes two streams as input and mixes them together.
 
 ## List available filters
 <a name="list"> </a>
+<a name="list-filters"> </a>
 
-```
+```bash
 ffmpeg -filters
 ```
 
 This will list all available filters. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
 
+Filters are listed in the filters manual `man ffmpeg-filters`.
+
 ## Show the parameters for a filter
 <a name="parameters"> </a>
-a name="item-help"> </a>
+<a name="item-help"> </a>
+<a name="filter-help"> </a>
 
 
-```
+```bash
 ffmpeg --help filter=color
 ```
 
@@ -99,7 +98,7 @@ You can also get help for other objects such as a `decoder`, `encoder`, `demuxer
 
 
 ## Decrease the volume of an audio file
-```
+```bash
 ffmpeg -filter_complex `sine=frequency=512:duration=10` sine.wav
 ffmpeg -i sine.wav -af 'volume=volume=0.5' quiet-sine.wav
 ffplay quiet-sine.wav
@@ -111,8 +110,7 @@ This creates a file containing a sine wav and then use the `volume` filter to de
 <a name="concat"> </a>
 <a name="concat-stream"> </a>
 
-
-```
+```bash
 ffmpeg -filter_complex 'sine=frequency=512:duration=2' sine1.wav
 ffmpeg -filter_complex 'sine=frequency=256:duration=5' sine2.wav
 ffmpeg -i sine1.wav -i sine2.wav -filter_complex '[0][1]concat=v=0:a=1'  -ac 1  concat.wav
@@ -122,7 +120,7 @@ ffplay concat.wav
 We [create two sine waves](#write-sine) like in the prevoius recipes. We then combine together the first (`[0]`) and second (`[1]`) inputs with the `concat` filter. We must specify that concat outputs no video streams and one audio stream because these are not the defaults: concat works with one video stream by default.
 
 
-Here is the documentation for concat.
+Here is the documentation for concat:
 
 ```
 > ffmpeg --help filter=concat
@@ -140,7 +138,9 @@ concat AVOptions:
 ```
 
 ## Play ten seconds of red
-```
+<a name="params"> </a>
+
+```bash
 ffplay -f lavfi color=color=red:duration=10s
 ```
 
@@ -148,13 +148,15 @@ Here we use the [color filter](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002
 
 You can also run this as `ffplay -f lavfi color=red:duration=10s` since color is a default parameter.
 
+You can list the available colors with `ffmpeg -colors`.
+
 
 See also: [ffplay vs ffmpeg](#play)
 
 ## Create an image consisting of solid red
 <a name="image"> </a>
 
-```
+```bash
 ffmpeg -filter_complex 'color=color=red' -frames:v 1  red.png
 ffplay red.png
 ```
@@ -162,14 +164,14 @@ ffplay red.png
 Here we specify that we are reading one frame with `-frames:v 1`.
 
 ## Write ten seconds of red to a file
-```
+```bash
 ffmpeg -filter_complex 'color=color=red:duration=10s'  red.mp4
 ```
 
 We use the color
 
 ## Create a video that fades between two colours
-```
+```bash
 ffplay -f lavfi 'color=color=red:duration=5s [red]; color=color=blue:duration=5s [blue]; [red][blue]xfade=duration=5s'
 ```
 
@@ -181,7 +183,7 @@ See also: [ffplay vs ffmpeg](#play)
 <a name="comma"> </a>
 <a name="timestamp"> </a>
 
-```
+```bash
 ffplay -f lavfi -i  'color=color=white, drawtext=text=%{pts}'
 ```
 
@@ -192,7 +194,7 @@ See the [section on positioning text](#positioning)
 # Capture the screen using linux
 <a name="capture-screen"> </a>
 
-```
+```bash
 ffplay  -f x11grab  -i ''
 ```
 
@@ -203,7 +205,7 @@ This [section of the wiki of the ffmpeg wiki](https://trac.ffmpeg.org/wiki/Captu
 See also: [Record a window](#capture-window), [Record a region of your screen](#capture-region), [list devices](#devices), [ffplay vs ffmpeg](#play)
 
 ## Change the size of a video
-```
+```bash
 ffmpeg -filter_complex 'color=color=white:size=1024x512:duration=5s, drawtext=text=%{pts}:fontsize=h' count.webm
 ffmpeg -i count.webm -filter_complex 'scale=512:256' count-resized.webm
 ffplay count-resized.webm
@@ -218,8 +220,7 @@ See also:
 <a name="text"> </a>
 <a name="input-stream"> </a>
 
-
-```
+```bash
 ffmpeg -filter_complex  'color=color=white:duration=10s, drawtext=text=hello:fontsize=20' out.mp4
 ```
 
@@ -227,14 +228,14 @@ ffmpeg -filter_complex  'color=color=white:duration=10s, drawtext=text=hello:fon
 
 We could, however, have used labels instead as we did before when [concatenating audio streams](#concat), like so:
 
-```
+```bash
 ffmpeg -filter_complex  'color=color=white:duration=10s [one]; [one] drawtext=text=hello:fontsize=20' out.mp4
 ```
 
 ## Trim a video to five seconds duration
 <a name="trim"> </a>
 
-```
+```bash
 ffmpeg -filter_complex 'color=color=white, drawtext=text=%{pts}, trim=duration=10s' count-to-ten.mp4
 ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
 ```
@@ -244,7 +245,7 @@ First we create a video which shows the timestamp each frame and is ten seconds 
 ## Turn a static image into a five second video of the image
 <a name="static-image"> </a>
 
-```
+```bash
 ffmpeg -filter_complex 'color=color=white, drawtext=text=hello:fontsize=40' -v:frame 1 static.png
 ffmpeg -i static.png  -filter_complex 'nullsrc=duration=5s [vid]; [vid][0]overlay' out.mp4
 ```
@@ -252,7 +253,7 @@ ffmpeg -i static.png  -filter_complex 'nullsrc=duration=5s [vid]; [vid][0]overla
 First we [create an image](#image) using the `-vframe` option. We then create a 5 second empty video using the `nullsrc` filter and overlay the static image on it.
 
 ## Concatenate two videos together
-```
+```bash
 ffmpeg -filter_complex 'color=color=white:duration=5s, drawtext=text=%{pts}' count-up.mp4
 ffmpeg -filter_complex 'color=color=white:duration=5s, drawtext=text=%{pts}, reverse' count-down.mp4
 ffmpeg -i count-up.mp4 -i count-down.mp4  -filter_complex '[0][1]concat' concat.mp4
@@ -263,7 +264,7 @@ First we create two videos one that [counts up to ten seconds](#timestamp), and 
 We then use the concat filter (as we did for [audio](#concat)) but this time we do not need to use concat - since the default output is a single video stream and no audio stream.
 
 ## Add a static introduction image to the beginning of a video
-```
+```bash
 ffmpeg -filter_complex 'color=color=white, drawtext=text=hello:fontsize=40' -v:frame 1 static.png
 ffmpeg -filter_complex 'color=color=red:duration=5s [red]; color=color=green:duration=5s [green]; [red][green]xfade=duration=5s' video.mp4
 ffmpeg  -i static.png -i video.mp4 -filter_complex 'nullsrc=duration=2s, [0]overlay [intro]; [intro][1]concat' with-title.mp4
@@ -271,16 +272,27 @@ ffmpeg  -i static.png -i video.mp4 -filter_complex 'nullsrc=duration=2s, [0]over
 
 First we create a static image with the word hello and a video which fades from red to green. Then we combine the two [overlaying the static image](#static-image) on a 2 second video and call it intro. This is concatenated with a video.
 
-## Use different channels
+## Add a logo to the corner of a picture
 
-## Swap left and write channels
+```bash
+ffmpeg -filter_complex 'color=white:size=100x100, drawtext=text=L:fontsize=h' -frames:v 1 logo.png
+ffmpeg -filter_complex 'color=red [red]; color=blue [blue]; [red][blue]xfade=duration=5s, trim=duration=5s' video.webm
+ffmpeg -i video.webm -i logo.png -filter_complex '[0][1]overlay=x=W-w:y=H-h' final.webm
+ffplay final.webm
+```
 
+We [create an image](#image) consisting of an L, [scaled](#scale-text) to the size of the log.
 
+## Add music to a video
+```
+ffmpeg -filter_complex 'color=blue [blue]; color=yellow [yellow]; [blue][yellow]xfade=duration=10s, trim=duration=10s' fade.webm
+ffmpeg -filter_complex 'sine=frequency=32+40*t:eval=true
+```
 
 ## List available devices
 <a name="devices"> </a>
 
-```
+```bash
 ffmpeg -devices
 ```
 
@@ -289,10 +301,9 @@ ffmpeg -devices
 
 
 ## Show document for a device
-```
+```bash
 ffmpeg -help device=x11grab
 ```
-
 
 # Positioning text
 <a name="positioning"> </a>
@@ -300,7 +311,7 @@ ffmpeg -help device=x11grab
 ## Placing text in the middle of the screen
 <a name="middle"> </a>
 
-```
+```bash
 ffplay -f lavfi -i 'color=color=white, drawtext=text=hello:x=(main_w - text_w) / 2:y=(main_h-text_h) /2'
 ```
 
@@ -313,7 +324,7 @@ Expressions are evaluated using [ffmpeg's own expression language] (https://ffmp
 See also: [ffplay vs ffmpeg](#play)
 
 ## Placing text at difference positions
-```
+```bash
 ffplay -f lavfi -i 'color=color=white, drawtext=text=bottom-right:x=main_w - text_w:y=(main_h-text_h), drawtext=text=top-left:x=0:y=0, drawtext=text=top-right:x=main_w-text_w:y=0, drawtext=text=bottom-left:x=0:y=main_h - text_h'
 ```
 
@@ -322,8 +333,10 @@ This recipe renders text in various positions. See the [previous recipe](#middle
 See also: [ffplay vs ffmpeg](#play)
 
 ## Scaling text to the size of the video
-```
-ffplay -f lavfi 'color=color=white:size=500x100, drawtext=text=hello:fontsize=h'
+<a name="scale-text"> </a>
+
+```bash
+ffplay -f lavfi 'color=color=white:size=500x100, drawtext=text=hello:fontsize=main_h'
 ```
 
 Here we use an expression in `fontsize` using the `main_h` variable so the font is the size of the screen. We also use the `size` parameter in color so that the full string fits in the window.
@@ -335,7 +348,7 @@ Here we use an expression in `fontsize` using the `main_h` variable so the font 
 
 You can use [ffplay](#ffplay) to write to display a file out the output a filter. But this is a wrapper around features that `ffmpeg` provides.
 
-```
+```bash
 ffmpeg -filter_complex 'color=red[red]; color=blue[blue]; [red][blue]xfade=duration=5s, trim=duration=5s' spectrum.webm
 ffmpeg -re  -i spectrum.mp4  -vf 'format=yuv420p' -f xv title
 ```
@@ -348,7 +361,7 @@ ffmpeg -re  -i spectrum.mp4  -vf 'format=yuv420p' -f xv title
 <a name="capture-window"> </a>
 <a name="capture-specific"> </a>
 
-```
+```bash
 xwininfo
 ffplay -window_id 0x520003e -f x11grab -i ''
 ```
@@ -358,7 +371,7 @@ This uses the `-window_id` option which is an option for the x11grab [device](#d
 There are [various options](https://www.ffmpeg.org/ffmpeg-devices.html#toc-Options-20) that allow you to select a specific region (`grab_x`, `grab_y`, `video_size`), follow the mouse (`-fillow_mouse`), hide the mouse (`-draw_mouse`),  and other things (`framerate`, `show_region`, `framerate`).
 
 ## Record a specific region of the screen
-```
+```bash
 ffmpeg -f x11grab -select_region 1 -i ''  region.mp4
 # ffmpeg -f x11grab  -i ''  -select_region 1 region.mp4 - this does not work
 ffplay region.mp4
@@ -369,28 +382,99 @@ This uses [x11grab](#capture-screen) to capture a region selected with the curso
 See also: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
 
 # Writing more readable filters
-
-Readability can be a bit of a trade off. What is easier to read for an expert may involve complexity for the new user. Code readability has an audience like books.
+Readability can be a bit of a trade off. What is easier to read for an expert may involve complexity for the new user. Code readability has an audience like writing does. There are various approaches to change how filters which can
 
 ## Using sources as input
 
 In some examples, we use complex filters with -filter_complex to support [source filters](source-filters). These will often be [labelled](#labels). You can simplify filters by using command-line parameters instead, which you may consider more readable - it certainly produces a shorter filter and the filter is quoted.
 
-```
+```bash
 ffmpeg -f lavfi -i 'color=red' -f lavfi -i 'color=green' -f lavfi -i 'color=blue' -filter_complex '[0][1][2]hstack=inputs=3, trim=duration=5s' stacked.mp4
 ```
 
 This commands uses [`-f lavfi`](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video.
 
-## Writing a filter to a file
+## Writing a filter in a file
+Using `-filter_complex_script` you can read a filter specification ("filter graph") from a file.
 
-```
+```bash
 echo "color=red:duration=5s" > filter.lavfi
 ffmpeg -filter_complex_script filter.lavfi red.mp4
 ffplay red.mp4
 ```
 
-See also: [Triming to 5s](#trim)
+## Omitting parameter names
+<a name="omit-name"> </a>
+
+Parameters have an order that can you can view with `ffmpeg --help filter=color`. If you provide parameters in this order you can omit the parameter name.
+
+```bash
+ffmpeg --help filter=color
+ffplay -f lavfi -i 'color=white:100x100'
+```
+
+Here we output a video with solid colour which a colour of `white` and a `size` of `100x100`.
+
+Here is some of the output from `ffmpeg --help filter=color`. Notice the order of parameters and the duplicate names:
+
+```
+color AVOptions:
+   color             <color>      ..FV.....T. set color (default "black")
+   c                 <color>      ..FV.....T. set color (default "black")
+   size              <image_size> ..FV....... set video size (default "320x240")
+   s                 <image_size> ..FV....... set video size (default "320x240")
+   rate              <video_rate> ..FV....... set video rate (default "25")
+   r                 <video_rate> ..FV....... set video rate (default "25")
+   duration          <duration>   ..FV....... set video duration (default -0.000001)
+   d                 <duration>   ..FV....... set video duration (default -0.000001)
+   sar               <rational>   ..FV....... set video sample aspect ratio (from 0 to INT_MAX) (default 1/1)
+
+```
+
+# Getting information
+
+## Listing objects
+ffmpeg have various types of object. These can be queried.
+
+```bash
+ffmpeg -colors
+ffmpeg -filters
+ffmpeg -devices
+ffmpeg -devices
+ffmpeg -codecs
+ffmpeg -decoders
+ffmpeg -encoders
+ffmpeg -protocols
+ffmpeg -filters
+ffmpeg -pix_fmts
+ffmpeg -sample_fmts
+ffmpeg -sinks pulse
+```
+
+See `man ffmpeg` for details.
+
+# Audio engineering
+
+## Generating a sine wave using aevalsrc
+<a name="aevalsrc-sine"> </a>
+
+[aevalsrc](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
+
+```
+ffplay -f lavfi -i 'aevalsrc=exprs=sin((128) *t*2*PI)'
+```
+
+Here we use an expression involving `t` which is the time in seconds. [ffmpeg's own expression language] (https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions.
+
+## Generating some interesting sounds
+
+```
+# Frequency that slowly increases
+ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
+
+ffplay -f lavfi -i 'aevalsrc=exprs=sin(*t*2*PI)'
+```
+
 
 # Index of language features
 <a name="features"> </a>
@@ -398,12 +482,16 @@ See also: [Triming to 5s](#trim)
 At its core, ffmpeg applies filters of input and output in a pipeline of filters.
 There are more filters than this cookbook will cover, you can [list filters](#list) from the commad line.
 
-Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs.
+Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs. Filters take [parameters](#params) which are expressed in the form [`key=value`](#params) and [separated by colon (`:`) characters](#colons). Parameters have an order and you can [omit the paramater name](#omit-name) if parameters are given in this order.
 
 You can connect up filters that take one input stream and have one output stream [using ,](#comma). Alternatively you can create a named stream and write to it by putting this is [square brackets after an expression](#output-filter).
 
 You can then run separate filters in parallel by [separating them with a ;](#parallel-stream). When doing so, it is often necessary to label streams, both for [output](#output-stream) and [input](#input-stream). Some filters such as [concat](#concat-stream) take multiple inputs and can produce multiple output.
 
+# Filters
+There are more filters than we can complete document here and there is already reference document. You can see documentation for filters with `man ffmpeg-filters` or [via the ffmpeg website](https://ffmpeg.org/ffmpeg-filters.html). There is a [syntax for expression parameters to filters](https://ffmpeg.org/ffmpeg-filters.html).
+
+You can [show help for a filter](#filter-help) and [list as filters](#list-filters).
 
 # About me
 I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
