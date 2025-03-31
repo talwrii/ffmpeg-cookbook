@@ -15,7 +15,7 @@ If you think a particularly recipe belongs in this guide feel free to [add it as
 # Alternatives and prior work
 There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook) but with only a couple of examples. There is [quite complete documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
 
-The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering).
+The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering). You can also [ask questions on reddit](https://www.reddit.com/r/ffmpeg).
 
 
 # Introduction
@@ -34,7 +34,7 @@ ffmpeg -filter_complex 'anullsrc=duration=10s [out]' -map '[out]' -ac 1 silence.
 
 You can play the silence you have created with `ffplay silence.wav`.
 
-This uses the [source filter](https://ffmpeg.org/ffmpeg-filters.html#toc-Filtering-Introduction), [anullsrc](https://ffmpeg.org/ffmpeg-filters.html#anullsrc) which generates ten seconds of silence (specified through the `duration` parameter) and then writes this to a stream labelled '[out]'. The `-map` command specifies stream labelled `[out]` is used in the output.
+This uses the [source filter(doc)](https://ffmpeg.org/ffmpeg-filters.html#toc-Filtering-Introduction), [anullsrc(doc)](https://ffmpeg.org/ffmpeg-filters.html#anullsrc) which generates ten seconds of silence (specified through the `duration` parameter) and then writes this to a stream labelled '[out]'. The `-map` command specifies stream labelled `[out]` is used in the output.
 
 You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 silence.wav` and an the output of the filter is ipplicitly used as the stream for output. But you cannot use `-af` because these filters must have precisely one input and one output and this has no input.
 
@@ -44,6 +44,8 @@ You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 
 <a name="source-filter"> </a>
 <a name="lavfi"> </a>
 <a name="colons"> </a>
+<a name="parameter-example"> </a>
+
 
 ```bash
 ffplay -f lavfi 'sine=frequency=256:duration=10'
@@ -51,9 +53,9 @@ ffplay -f lavfi 'sine=frequency=256:duration=10'
 
 This command specifies that the format of the input is a `libavformat` filter ("LibAVFIlter"). `ffplay` does not have a `-filter_complex` argument but you can use this instead for complex filters. `-f lavfi` can also be used with `ffmpeg` - but you must use `-i` to specify the input.
 
-The parameters for the source filter, [`sine`](https://ffmpeg.org/ffmpeg-filters.html#sine), are specified by `=` and separted by `:`.
+The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-filters.html#sine), are specified by `=` and separted by `:`.
 
-You do not need to use ffplay to play instead you can [use the xv output](#xv)  which xan be useful if you have multiple filters.
+You do not need to use ffplay to play instead you can [use the xv output](#xv)  which can be useful if you have multiple filters.
 
 See also: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
 ## Write a sine wave to a file
@@ -95,6 +97,8 @@ ffmpeg --help filter=color
 ```
 
 You can also get help for other objects such as a `decoder`, `encoder`, `demuxer`, `muxer`, `bsf` (bit stream filter), or `protocol`. See the `man ffmpeg` for details.
+
+Some filters are marked with a `T`, which indicates that they can be modified through commands.
 
 
 ## Decrease the volume of an audio file
@@ -144,7 +148,7 @@ concat AVOptions:
 ffplay -f lavfi color=color=red:duration=10s
 ```
 
-Here we use the [color filter](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) together with the color name of `red` and a `duration` of 10s.
+Here we use the [color filter(doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) together with the color name of `red` and a `duration` of 10s.
 
 You can also run this as `ffplay -f lavfi color=red:duration=10s` since color is a default parameter.
 
@@ -171,6 +175,8 @@ ffmpeg -filter_complex 'color=color=red:duration=10s'  red.mp4
 We use the color
 
 ## Create a video that fades between two colours
+<a name="video-source-filter"> </a>
+
 ```bash
 ffplay -f lavfi 'color=color=red:duration=5s [red]; color=color=blue:duration=5s [blue]; [red][blue]xfade=duration=5s'
 ```
@@ -182,6 +188,8 @@ See also: [ffplay vs ffmpeg](#play)
 ## Create a video that counts up to 10
 <a name="comma"> </a>
 <a name="timestamp"> </a>
+<a name="drawtext"> </a>
+
 
 ```bash
 ffplay -f lavfi -i  'color=color=white, drawtext=text=%{pts}'
@@ -289,6 +297,27 @@ ffmpeg -filter_complex 'color=blue [blue]; color=yellow [yellow]; [blue][yellow]
 ffmpeg -filter_complex 'sine=frequency=32+40*t:eval=true
 ```
 
+## Change color of a frame over time
+<a name="command-example"> </a>
+
+The `sendcmd` filter allows you to change parameters at other filters at particular timestamps ([amongst other things (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd))
+
+```
+ffplay -f lavfi -i color@x, sendcmd=commands=1 color@x color blue; 2 color@x color green; 3 color@x color purple
+```
+
+`color@x` creates a color filter with the name `color@x` which can be used to distinguish different filters.
+
+For certain changes over time, particularly "continuous" changes you can use [expressions with the `t` parameter](#time-expressions) including using the [if expression](#if-expression) - but some commands do not support [expressions](#expressions) and for discrete changes sendcmd can be more useful.
+
+## Change the frequency of an audio filter
+```
+ffplay -f lavfi -i  "aevalsrc=exprs=0.2 * gte(sin(128 * t * 2 * PI)\,0), bandpass=frequency=250, asendcmd=commmands='2 bandpass frequency '"
+```
+
+Unfortunately, ffmpeg requires you to use a difference filter for sending commands to audio filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd). This example [creates a square wave](#aevalsrc) using an [expression](#expression)
+
+
 ## List available devices
 <a name="devices"> </a>
 
@@ -310,16 +339,18 @@ ffmpeg -help device=x11grab
 
 ## Placing text in the middle of the screen
 <a name="middle"> </a>
+<a name="variables-1"> </a>
+
 
 ```bash
 ffplay -f lavfi -i 'color=color=white, drawtext=text=hello:x=(main_w - text_w) / 2:y=(main_h-text_h) /2'
 ```
 
-We [render text using the drawtext filter](#text) as we did in this previous recipe. But we also use the `x` and `y` paramaters that accept [drawtext's own expression language](https://ffmpeg.org/ffmpeg-filters.html#Syntax).
+We [render text using the drawtext filter](#text) as we did in this previous recipe. But we also use the `x` and `y` paramaters that accept [drawtext's own expression language(doc)](https://ffmpeg.org/ffmpeg-filters.html#Syntax).
 
 Note that we the division operation, `/`, in the expression. `main_w` represents the video width, `main_h` its height, `text_w` the rendered text's width and `text_h` its height.
 
-Expressions are evaluated using [ffmpeg's own expression language] (https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions.
+In the `x` parameter for `drawtext`, [expressions](#expressions) are evaluated using [ffmpeg's own expression language(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions (`sin`, `cos`, etc) and operations (`*`, `/`, `-`, etc).
 
 See also: [ffplay vs ffmpeg](#play)
 
@@ -355,6 +386,19 @@ ffmpeg -re  -i spectrum.mp4  -vf 'format=yuv420p' -f xv title
 
 `-re` tells `ffmpeg` to read the file at normal speed (otherwise ffmpeg would read as fast as possible). `format=yuv420p` converts to a format that `xv` accepts.
 
+## Limit the speed when using xv
+If you do not use the [`-re` property (ex)](#sv) or use [source filters (ex)](#video-source-filters) then by default ffmpeg will run as fast as possible - even when writing to `xv`. You will not be able to watch the output and this will use 100% of the cpu. You can fix this use the [realtime (doc)](https://ffmpeg.org/ffmpeg-filters.html#realtime_002c-arealtime) filter.
+
+```
+ffmpeg -filter_complex 'color=white, drawtext=text=%{pts}:fontsize=h, realtime' -f xv ''
+# This would run too fast:
+# ffmpeg -filter_complex 'color=white, drawtext=text=%{pts}:fontsize=h -f xv ''
+
+ffmpeg -filter_complex 'color=white, drawtext=text=%{pts}:fontsize=h, trim=duration=10s' video.mp4
+ffmpeg -i  video.mp4 -vf 'realtime' -f xv ''
+```
+
+The first example creates a stream counting up using [drawtext (ex)](#drawtext). and then [sends this xv (ex)](#xv). We specify `realtime` as the final filter to play at normal speed.
 
 # Recording your computer
 ##  Record a specific window using linux
@@ -454,9 +498,10 @@ ffmpeg -sinks pulse
 See `man ffmpeg` for details.
 
 # Audio engineering
-
 ## Generating a sine wave using aevalsrc
 <a name="aevalsrc-sine"> </a>
+<a name="variables-2"> </a>
+
 
 [aevalsrc](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
 
@@ -467,17 +512,80 @@ ffplay -f lavfi -i 'aevalsrc=exprs=sin((128) *t*2*PI)'
 Here we use an expression involving `t` which is the time in seconds. [ffmpeg's own expression language] (https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions.
 
 ## Generating some interesting sounds
+<a name="time-expressions"> </a>
+<a name="aevalsrc"> </a>
+
 
 ```
-# Frequency that slowly increases
+# Create a sine wave that slowly changes frequency
 ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
 
-ffplay -f lavfi -i 'aevalsrc=exprs=sin(*t*2*PI)'
+
+# Create a square wave
+ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
+
 ```
+
+# Using commands
+See also: [Expressions](#expressions)
+
+[Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(ex)](#parameter-example).
+
+## Check parameter can be updated by a command
+The [help for a filter (ex)](#parmaters) display whether a filter can be modified by a command with the letter `C`
+
+```
+ffmpeg --help filter=drawtext
+```
+
+
+
+Here in the output of `ffmpeg --help filter=drawtext. We can see see that text can be updated from commands, but the `fontfile` and the `textfile` cannot.
+
+```
+Filter drawtext
+  Draw text on top of video frames using libfreetype library.
+    Inputs:
+       #0: default (video)
+    Outputs:
+       #0: default (video)
+drawtext AVOptions:
+   fontfile          <string>     ..FV....... set font file
+   text              <string>     ..FV.....T. set text
+   textfile          <string>     ..FV....... set text file
+```
+
+Many commands such as `sine` have parameters that cannot be updated even though you might expect them to be updateable.
+
+
+## Update commands from the command line with zmq
+The [zmq (doc)](https://ffmpeg.org/ffmpeg-filters.html#zmq_002c-azmq) filter allows one to read commands to control filters from and external source. `zmq` is a protocol popular protocol used for light weight messages buses. There is command line tooling for zmq.
+
+```
+pip install zeroless-tools
+ffplay -f lavfi -i  'color, zmq' &
+echo 'color color orange' | zeroclient 5555 req
+echo 'color color purple | zeroclient 5555 req
+kill %
+```
+
+`zmq` supports different modes of sending - we seem to need use the request protocol., indicated by `req`
+
+## Create a remote control for a video being played
+
+
+```
+ffplay -f lavfi -i ''
+```
+
+
+
+
 
 
 # Index of language features
 <a name="features"> </a>
+
 
 At its core, ffmpeg applies filters of input and output in a pipeline of filters.
 There are more filters than this cookbook will cover, you can [list filters](#list) from the commad line.
@@ -492,6 +600,13 @@ You can then run separate filters in parallel by [separating them with a ;](#par
 There are more filters than we can complete document here and there is already reference document. You can see documentation for filters with `man ffmpeg-filters` or [via the ffmpeg website](https://ffmpeg.org/ffmpeg-filters.html). There is a [syntax for expression parameters to filters](https://ffmpeg.org/ffmpeg-filters.html).
 
 You can [show help for a filter](#filter-help) and [list as filters](#list-filters).
+
+# Expressions
+Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext](#drawtext) has a different expression language using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
+
+Expressions are useful for "continuous data", but can be rendered discrete using `if`. For discrete variables [commands](#commands-examples) can be more useful. Again filters choose whether a parameter can be updated from a command.
+
+Examples of parameters supporting expressions: [drawtext=x](#drawtext), [aevalsrc=expr](#aevalsrc)
 
 # About me
 I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
