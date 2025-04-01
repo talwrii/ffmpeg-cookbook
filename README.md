@@ -1,13 +1,13 @@
 # FFmpeg cookbook
 *@readwithai - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/)*
 
-This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds the readers knowledge of ffmpeg features through examples, before providing more applied examples which link back to these learning examples.
+This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds the readers knowledge of ffmpeg features through examples, before providing more applied examples which link back to these learning examples. You probably want to jump to the [introduction](#introduction).
 
 I created it because I found working out what ffmpeg was doing from snippets too difficult and needed to form an understanding based on first principles
 
 FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features they become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
 
-This file provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
+This giude provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
 
 # Attribution
 Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in ffmpeg.
@@ -24,8 +24,12 @@ The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly 
 
 What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking linking, tries to use an innovative approach to ordering of material. Focuses on exapmles that can be immediately run without material.
 
-# Introduction
-`ffmpeg` has a number of core features that when understood help you do a range on things. This introduction tries to cover most of these core featues.
+<a name="introduction"> </a>
+# Introduction: The core of FFmpeg
+`ffmpeg` has a number of core features that when understood help you do a range on things. This introduction tries to cover most of these core features. If you cannot understand the FFmpeg reference documentation or an example that you have found on the internet sufficiently to use it, I would suggest working through this guide or the feature closest to what you want to do. But don't worry - later examples will link back to this introduction.
+
+Once you have read this (or if you want to jump ahead) you might like to look at some [specific topics](#topics) or search for a recipe.
+
 
 <a name="source"> </a>
 <a name="output-filter"> </a>
@@ -348,7 +352,7 @@ Here we create a square wave because it [has a lot of overtones (wiki)](https://
 
 Unfortunately, ffmpeg requires you to use a difference filter for sending commands to audio filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd). This example [creates a square wave](#aevalsrc) using an [expression](#expression)
 
-> See also: [Audio engineering](#audio-engineering)
+> See also: [Audio engineering](#audio)
 <a name="devices"> </a>
 ## List available devices
 ```bash
@@ -361,9 +365,59 @@ You can see more information about defines with [`man ffmpeg-devices`](#man-page
 
 > See also: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
 
-<a name="positioning"> </a>
-# Positioning text
+<a name="topics"> </a>
+## Finishing up
+Hopefully this introduction has introduced to a broad range of how ffmpeg works and what it can do through examples. The rest of the guide covers topics in the style of a more traditional cookbook.
 
+Here are some topics covered
+
+* [Recording your computer](#recording)
+* [Formatting text](#text)
+* [Audio engineering](#audio)
+* [Interesting outputs from FFmpeg](#text)
+* [Controlling FFmpeg externally](#external)
+
+We also cover some more topics of ther internals of ffmpeg - while linking to examples.
+
+* [Using commands](#commands)
+* [Writing more readable filters](#readability)
+* [Getting information about FFmpeg](#reflection)
+
+
+
+
+<a name="recording"> </a>
+<a name="computer"> </a>
+# Recording your computer
+<a name="capture-window"> </a>
+<a name="capture-specific"> </a>
+##  Record a specific window using linux
+```bash
+xwininfo
+ffplay -window_id 0x520003e -f x11grab -i ''
+```
+
+This example works on [linux](#programming), but there are [similar filters for different operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop).
+
+This uses the `-window_id` option which is an option for the x11grab [device](#devices) to record a specific window [on your screen](#capture-screen).
+
+There are [various options](https://www.ffmpeg.org/ffmpeg-devices.html#toc-Options-20) that allow you to select a specific region (`grab_x`, `grab_y`, `video_size`), follow the mouse (`-fillow_mouse`), hide the mouse (`-draw_mouse`),  and other things (`framerate`, `show_region`, `framerate`).
+
+## Record a specific region of the screen
+```bash
+ffmpeg -f x11grab -select_region 1 -i ''  region.mp4
+# ffmpeg -f x11grab  -i ''  -select_region 1 region.mp4 - this does not work
+ffplay region.mp4
+```
+
+This uses [x11grab](#capture-screen) to capture a region selected with the cursor when run (specified by [the option](https://ffmpeg.org/ffmpeg-devices.html#Options-20) `-select_region 1`). Note that `-select_region 1` must come before `-i`
+
+See also: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
+
+
+<a name="positioning"> </a>
+<a name="text"> </a>
+# Formatting text
 ## Placing text in the middle of the screen
 See the [earlier example](#middle)
 
@@ -385,7 +439,37 @@ ffplay -f lavfi 'color=color=white:size=500x100, drawtext=text=hello:fontsize=ma
 
 Here we use an expression in `fontsize` using the `main_h` variable so the font is the size of the screen. We also use the `size` parameter in color so that the full string fits in the window.
 
+<a name="audio"> </a>
+<a name="aevalsrc-sine"> </a>
+<a name="variables-2"> </a>
+# Audio engineering
+FFmpeg is not explicitly designed for audio engineering and there a number of tools better suited for serious engineering. However, `ffmpeg` is performant, convenient for editting videos that need a little engineering and these examples are fun, interactive, and can demostrate features
+## Generating a sine wave using aevalsrc
+[aevalsrc](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
 
+```
+ffplay -f lavfi -i 'aevalsrc=exprs=sin((128) *t*2*PI)'
+```
+
+Here we use an expression involving `t` which is the time in seconds. [ffmpeg's own expression language] (https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions.
+
+<a name="time-expressions"> </a>
+<a name="aevalsrc"> </a>
+## Generating some interesting sounds with aevalsrc
+```
+# Create a sine wave that slowly changes frequency
+ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
+
+# Create a square wave
+ffplay -f lavfi -i 'aevalsrc=exprs=gte(sin(250 * t * 2 * PI)\, 0)'
+```
+
+All of these examples use [aevalsrc (example)](#aevalsrc-sine) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc).
+
+In the second example we use the `sin` to give us something periodic with a known function and then use the greater than or equal function `gte` to turn this into a [square wave (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis).  Note how we escape
+
+
+<a name="outputs"> </a>
 # Interesting outputs for ffmpeg
 <a name="xv"> </a>
 ## Display output rather than write it to a file
@@ -416,38 +500,15 @@ The first example creates a stream counting up using [drawtext (example)](#drawt
 
 > **See also**: [Play media with ffplay](#ffplay)
 
-<a name="computer"> </a>
-# Recording your computer
-<a name="capture-window"> </a>
-<a name="capture-specific"> </a>
-##  Record a specific window using linux
-```bash
-xwininfo
-ffplay -window_id 0x520003e -f x11grab -i ''
-```
+<a name="external"> </a>
+## Controlling FFmpeg externally
+If you are using interesting outputs such as [video output](#xv) or streaming it may make sense to control ffmpeg externally. You can do this using [commands (example)](#command-example) [(doc)](#commands) which can be [controlled from the command line or programs via zmq](#zmq).
 
-This example works on [linux](#programming), but there are [similar filters for different operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop).
-
-This uses the `-window_id` option which is an option for the x11grab [device](#devices) to record a specific window [on your screen](#capture-screen).
-
-There are [various options](https://www.ffmpeg.org/ffmpeg-devices.html#toc-Options-20) that allow you to select a specific region (`grab_x`, `grab_y`, `video_size`), follow the mouse (`-fillow_mouse`), hide the mouse (`-draw_mouse`),  and other things (`framerate`, `show_region`, `framerate`).
-
-## Record a specific region of the screen
-```bash
-ffmpeg -f x11grab -select_region 1 -i ''  region.mp4
-# ffmpeg -f x11grab  -i ''  -select_region 1 region.mp4 - this does not work
-ffplay region.mp4
-```
-
-This uses [x11grab](#capture-screen) to capture a region selected with the cursor when run (specified by [the option](https://ffmpeg.org/ffmpeg-devices.html#Options-20) `-select_region 1`). Note that `-select_region 1` must come before `-i`
-
-See also: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
-
+<a name="readability"> </a>
 # Writing more readable filters
 Readability can be a bit of a trade off. What is easier to read for an expert may involve complexity for the new user. Code readability has an audience like writing does. There are various approaches to change how filters which can
 
 ## Using source filters as input
-
 In some examples, we use complex filters with -filter_complex to support [source filters](source-filters). These will often be [labelled](#labels). You can simplify filters by using command-line parameters instead, which you may consider more readable - it certainly produces a shorter filter and the filter is quoted.
 
 ```bash
@@ -464,7 +525,6 @@ echo "color=red:duration=5s" > filter.lavfi
 ffmpeg -filter_complex_script filter.lavfi red.mp4
 ffplay red.mp4
 ```
-
 <a name="omit-name"> </a>
 ## Omitting parameter names
 Parameters have an order that can you can view with `ffmpeg --help filter=color`. If you provide parameters in this order then you can omit the parameter name.
@@ -491,9 +551,8 @@ color AVOptions:
    sar               <rational>   ..FV....... set video sample aspect ratio (from 0 to INT_MAX) (default 1/1)
 
 ```
-
-# Getting information
-
+<a name="reflection"> </a>
+# Getting information about FFmpeg
 ## Listing objects
 ffmpeg have various types of object. These can be queried.
 
@@ -516,40 +575,13 @@ See [`man ffmpeg`](#man-pages) for details.
 
 > See also: [Listing ffmpeg filters (example)](#list-filters) , [Documentation](#documentation)
 
-<a name="audio-engineering"> </a>
-<a name="aevalsrc-sine"> </a>
-<a name="variables-2"> </a>
-# Audio engineering
-FFmpeg is not explicitly designed for audio engineering and there a number of tools better suited for serious engineering. However, `ffmpeg` is performant, convenient for editting videos that need a little engineering and these examples are fun, interactive, and can demostrate features
-## Generating a sine wave using aevalsrc
-[aevalsrc](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
-
-```
-ffplay -f lavfi -i 'aevalsrc=exprs=sin((128) *t*2*PI)'
-```
-
-Here we use an expression involving `t` which is the time in seconds. [ffmpeg's own expression language] (https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions.
-
-<a name="time-expressions"> </a>
-<a name="aevalsrc"> </a>
-## Generating some interesting sounds with aevalsrc
-```
-# Create a sine wave that slowly changes frequency
-ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
-
-# Create a square wave
-ffplay -f lavfi -i 'aevalsrc=exprs=gte(sin(250 * t * 2 * PI)\, 0)'
-```
-
-All of these examples use [aevalsrc (example)](#aevalsrc-sine) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc).
-
-In the second example we use the `sin` to give us something periodic with a known function and then use the greater than or equal function `gte` to turn this into a [square wave (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis).  Note how we escape
-
+<a name="commands"> </a>
 <a name="commands-topic"> </a>
 # Using commands
-See also: [Expressions](#expressions)
 
 [Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(example)](#parameter-example).
+
+> See also: [Expressions](#expressions)
 
 ## Check parameter can be updated by a command
 The [help for a filter (example)](#parmaters) display whether a filter can be modified by a command with the letter `C`
@@ -575,7 +607,7 @@ drawtext AVOptions:
 
 Many commands such as `sine` have parameters that cannot be updated even though you might expect them to be updateable.
 
-
+<a name="zmq"> </a>
 ## Update commands from the command line with zmq
 The [zmq (doc)](https://ffmpeg.org/ffmpeg-filters.html#zmq_002c-azmq) filter allows one to read commands to control filters from and external source. `zmq` is a protocol popular protocol used for light weight messages buses. There is command line tooling for zmq.
 
