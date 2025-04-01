@@ -56,7 +56,6 @@ The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-fi
 
 You do not need to use ffplay to play instead you can [use the xv output](#xv)  which can be useful if you have multiple filters.
 
-> [!NOTE]
 > See also: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
 
 <a name="write_sine"></a>
