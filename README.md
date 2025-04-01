@@ -14,6 +14,7 @@ Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [variou
 
 If you think a particularly recipe belongs in this guide feel free to [add it as an issue](https://github.com/talwrii/ffmpeg-cookbook/issues). It may take me a little time to add recipes as I want to keep the guide accessible to beginners, so bear this in mind when considering the whether submitting me recipes is worth your time!
 
+<a name="alternatives"> </a>
 # Alternatives and prior work
 There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook) but with only a couple of examples. There is [quite complete reference documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
 
@@ -64,8 +65,9 @@ You do not need to use ffplay to play instead you can [use the xv output](#xv)  
 ffmpeg -filter_complex 'sine=frequency=256:duration=10' sine.wav
 ffplay sine.wav
 ```
-
 Note how this compares to the previous example. This shows how you can convert between filters that play media and those that create a file containing the media.
+
+> See also: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc)
 
 <a name="labels"> </a>
 ## Combine two sine waves into a chord.
@@ -81,9 +83,11 @@ This creates two streams, `[one]` and `[two]`, which are then mixed together int
 ffmpeg -filters
 ```
 
-This will list all available filters. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
+This command list all available filters together with some information about that. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
 
-Filters are listed in the filters manual `man ffmpeg-filters`.
+Filters are listed in the filters [manual page](#man-pages) `man ffmpeg-filters`.
+
+> **See also:**: [About filters](#filters-abstract)
 
 <a name="parameters"> </a>
 <a name="item-help"> </a>
@@ -93,10 +97,11 @@ Filters are listed in the filters manual `man ffmpeg-filters`.
 ffmpeg --help filter=color
 ```
 
-You can also get help for other objects such as a `decoder`, `encoder`, `demuxer`, `muxer`, `bsf` (bit stream filter), or `protocol`. See the `man ffmpeg` for details.
+You can also get help for other objects such as a `decoder`, `encoder`, `demuxer`, `muxer`, `bsf` (bit stream filter), or `protocol`. See the [`man ffmpeg`](#man-pages) for details.
 
-Some filters are marked with a `T`, which indicates that they can be modified through commands.
+Some filters are marked with a `T`, which indicates that they can be [modified through commands (ex)](#commands-example).
 
+Unfortunately, some information about filters such as which which properties can be evaluated with expressions and the expressions that can be used is not shown in this help but must be found in [reference documentation](#documentation).
 
 ## Decrease the volume of an audio file
 ```bash
@@ -191,7 +196,25 @@ This uses the [drawtext filter's](https://ffmpeg.org/ffmpeg-filters.html#drawtex
 
 See the [section on positioning text](#positioning)
 
+<a name="middle"> </a>
+<a name="variables-1"> </a>
+<a name="expression-example"> </a>
+## Placing text in the middle of the screen
+```bash
+ffplay -f lavfi -i 'color=color=white, drawtext=text=hello:x=(main_w - text_w) / 2:y=(main_h-text_h) /2'
+```
+
+We [render text using the drawtext filter](#text) as we did in this previous recipe. But we also use the `x` and `y` paramaters that accept [drawtext's own expression language(doc)](https://ffmpeg.org/ffmpeg-filters.html#Syntax).
+
+Note that we the division operation, `/`, in the expression. `main_w` represents the video width, `main_h` its height, `text_w` the rendered text's width and `text_h` its height.
+
+In the `x` parameter for `drawtext`, [expressions](#expressions) are evaluated using [ffmpeg's own expression language(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions (`sin`, `cos`, etc) and operations (`*`, `/`, `-`, etc).
+
+> See also: [ffplay vs ffmpeg](#play)
+
+
 <a name="capture-screen"> </a>
+<a name="x11grab"> </a>
 ## Capture the screen using linux
 ```bash
 ffplay  -f x11grab  -i ''
@@ -292,6 +315,7 @@ ffmpeg -f x11grab  -i '' -vf 'hue=s=0, format=yuv420p'  -f xv ''
 
 Here we take the [input the screen](#xv)
 
+<a name="commands-example"> </a>
 <a name="command-example"> </a>
 ## Change color of a frame over time
 The `sendcmd` filter allows you to change parameters at other filters at particular timestamps ([amongst other things (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd))
@@ -304,14 +328,24 @@ ffplay -f lavfi -i color@x, sendcmd=commands=1 color@x color blue; 2 color@x col
 
 For certain changes over time, particularly "continuous" changes you can use [expressions with the `t` parameter](#time-expressions) including using the [if expression](#if-expression) - but some commands do not support [expressions](#expressions) and for discrete changes sendcmd can be more useful.
 
-## Change the frequency of an audio filter
+Note that [audio filters](#asendcmd) and video filters use a different filter to change commands.
+
+> See also: [Section on commands](#commands-topic)
+
+<a name="asendcmd"> </a>
+<a name="escaping-audio"> </a>
+## Change the frequency of an audio bandpass
 ```
-ffplay -f lavfi -i  "aevalsrc=exprs=0.2 * gte(sin(128 * t * 2 * PI)\,0), bandpass=frequency=250, asendcmd=commmands='2 bandpass frequency '"
+ffplay -f lavfi -i  "aevalsrc=exprs=0.2 * gte(sin(128 * t * 2 * PI)\,0), bandpass=frequency=250, asendcmd=commmands='2 bandpass frequency 100'"
 ```
+
+This is similar to the [previous example](#command-example) but for an audio filter.
+
+Here we create a square wave because it [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the aevalsrc filter that allows one to specific a formula, that we send through a bandpass filter. This is then sent into asendcmd which has a command to change the frequency of the bandpass signal at two seconds.
 
 Unfortunately, ffmpeg requires you to use a difference filter for sending commands to audio filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd). This example [creates a square wave](#aevalsrc) using an [expression](#expression)
 
-
+> See also: [Audio engineering](#audio-engineering)
 <a name="devices"> </a>
 ## List available devices
 ```bash
@@ -322,27 +356,15 @@ ffmpeg -devices
 `E` means an output device
 
 
-## Show document for a device
-```bash
-ffmpeg -help device=x11grab
-```
+You can see more information about defines with [`man ffmpeg-devices`](#man-pages).
+
+> See also: [xv device for video output](#sv), [x11grab device for video input](#x11grab)
+
 <a name="positioning"> </a>
 # Positioning text
 
-<a name="middle"> </a>
-<a name="variables-1"> </a>
 ## Placing text in the middle of the screen
-```bash
-ffplay -f lavfi -i 'color=color=white, drawtext=text=hello:x=(main_w - text_w) / 2:y=(main_h-text_h) /2'
-```
-
-We [render text using the drawtext filter](#text) as we did in this previous recipe. But we also use the `x` and `y` paramaters that accept [drawtext's own expression language(doc)](https://ffmpeg.org/ffmpeg-filters.html#Syntax).
-
-Note that we the division operation, `/`, in the expression. `main_w` represents the video width, `main_h` its height, `text_w` the rendered text's width and `text_h` its height.
-
-In the `x` parameter for `drawtext`, [expressions](#expressions) are evaluated using [ffmpeg's own expression language(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions (`sin`, `cos`, etc) and operations (`*`, `/`, `-`, etc).
-
-See also: [ffplay vs ffmpeg](#play)
+See the [earlier example](#middle)
 
 ## Placing text at difference positions
 ```bash
@@ -487,9 +509,11 @@ ffmpeg -sinks pulse
 
 See `man ffmpeg` for details.
 
+<a name="audio-engineering"> </a>
 <a name="aevalsrc-sine"> </a>
 <a name="variables-2"> </a>
 # Audio engineering
+FFmpeg is not explicitly designed for audio engineering and there a number of tools better suited for serious engineering. However, `ffmpeg` is performant, convenient for editting videos that need a little engineering and these examples are fun, interactive, and can demostrate features
 ## Generating a sine wave using aevalsrc
 [aevalsrc](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
 
@@ -501,17 +525,20 @@ Here we use an expression involving `t` which is the time in seconds. [ffmpeg's 
 
 <a name="time-expressions"> </a>
 <a name="aevalsrc"> </a>
-## Generating some interesting sounds
+## Generating some interesting sounds with aevalsrc
 ```
 # Create a sine wave that slowly changes frequency
 ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
 
-
 # Create a square wave
-ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
-
+ffplay -f lavfi -i 'aevalsrc=exprs=gte(sin(250 * t * 2 * PI)\, 0)'
 ```
 
+All of these examples use [aevalsrc (ex)](#aevalsrc-sine) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc).
+
+In the second example we use the `sin` to give us something periodic with a known function and then use the greater than or equal function `gte` to turn this into a [square wave (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis).  Note how we escape
+
+<a name="commands-topic"> </a>
 # Using commands
 See also: [Expressions](#expressions)
 
@@ -573,16 +600,56 @@ You can connect up filters that take one input stream and have one output stream
 You can then run separate filters in parallel by [separating them with a ;](#parallel-stream). When doing so, it is often necessary to label streams, both for [output](#output-stream) and [input](#input-stream). Some filters such as [concat](#concat-stream) take multiple inputs and can produce multiple output.
 
 # Filters
+<a name="filters-abstract"> </a>
 There are more filters than we can complete document here and there is already reference document. You can see documentation for filters with `man ffmpeg-filters` or [via the ffmpeg website](https://ffmpeg.org/ffmpeg-filters.html). There is a [syntax for expression parameters to filters](https://ffmpeg.org/ffmpeg-filters.html).
 
 You can [show help for a filter](#filter-help) and [list as filters](#list-filters).
 
+<a name="expressions-topic"> </a>
 # Expressions
 Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext](#drawtext) has a different expression language using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
 
 Expressions are useful for "continuous data", but can be rendered discrete using `if`. For discrete variables [commands](#commands-examples) can be more useful. Again filters choose whether a parameter can be updated from a command.
 
 Examples of parameters supporting expressions: [drawtext=x](#drawtext), [aevalsrc=expr](#aevalsrc)
+
+It may be useful to understand some [programming concepts](#programming) to use expressions , such as escaping and variables.
+<a name="documentation"> </a>
+# Documentation
+<a name="man-pages"> </a>
+## Manual pages
+Manual pages run through the command `man` are a commonly used way to provided easy to access documentation from the command-line.
+
+FFmpeg provides various manual pages. You can show these with the command `apropos ffmepg`
+
+Output includes
+
+```
+ffmpeg (1)           - ffmpeg media converter
+ffmpeg-all (1)       - ffmpeg media converter
+ffmpeg-bitstream-filters (1) - FFmpeg bitstream filters
+ffmpeg-codecs (1)    - FFmpeg codecs
+ffmpeg-devices (1)   - FFmpeg devices
+ffmpeg-filters (1)   - FFmpeg filters
+ffmpeg-formats (1)   - FFmpeg formats
+ffmpeg-protocols (1) - FFmpeg protocols
+ffmpeg-resampler (1) - FFmpeg Resampler
+ffmpeg-scaler (1)    - FFmpeg video scaling and pixel format converter
+ffmpeg-utils (1)     - FFmpeg utilities
+```
+
+## Web pages
+FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html). See [alternatives](#alternatives) for documentation similar to this.
+
+
+<a name="programming"> </a>
+# General programming and command-line knowledge
+FFmpeg is a command-line tool written for the kind of user that uses command-line tools. This has certain affordances and norms which ffmpeg will assume and use. Completely covering these concepts would distract from the article and take time. However, I can provide links to certain concepts that someone more interested in ffmpeg from an artistic or practical angle might have.
+
+Once you have derived some value from this guide, you might like to review all these concepts.
+
+* [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (ex)](expression-example) [(topic)](#expressions-topic).
+
 
 # About me
 I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
