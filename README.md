@@ -46,6 +46,7 @@ You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 
 <a name="lavfi"> </a>
 <a name="colons"> </a>
 <a name="parameter-example"> </a>
+<a name="ffplay"> </a>
 ## Play a sine wav at 256 hertz for ten seconds
 ```bash
 ffplay -f lavfi 'sine=frequency=256:duration=10'
@@ -99,7 +100,7 @@ ffmpeg --help filter=color
 
 You can also get help for other objects such as a `decoder`, `encoder`, `demuxer`, `muxer`, `bsf` (bit stream filter), or `protocol`. See the [`man ffmpeg`](#man-pages) for details.
 
-Some filters are marked with a `T`, which indicates that they can be [modified through commands (ex)](#commands-example).
+Some filters are marked with a `T`, which indicates that they can be [modified through commands (example)](#commands-example).
 
 Unfortunately, some information about filters such as which which properties can be evaluated with expressions and the expressions that can be used is not shown in this help but must be found in [reference documentation](#documentation).
 
@@ -220,11 +221,13 @@ In the `x` parameter for `drawtext`, [expressions](#expressions) are evaluated u
 ffplay  -f x11grab  -i ''
 ```
 
+This exapmle works on [linux](#programming) but there are [analogs for other operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop)
+
 This [section of the wiki of the ffmpeg wiki](https://trac.ffmpeg.org/wiki/Capture/Desktop) describes how to capture on different systems. You can also [capture a specific window](#capture-window), or a [specific region](#capture-region).
 
 [x11grab](https://www.ffmpeg.org/ffmpeg-devices.html#x11grab) supports various options which can for example be used to capture a section of the screen.
 
-See also: [Record a window](#capture-window), [Record a region of your screen](#capture-region), [list devices](#devices), [ffplay vs ffmpeg](#play)
+See also: [Recording your computer](#computer), [Record a window](#capture-window), [Record a region of your screen](#capture-region), [list devices](#devices), [ffplay vs ffmpeg](#play)
 
 ## Change the size of a video
 ```bash
@@ -254,7 +257,7 @@ ffmpeg -filter_complex  'color=color=white:duration=10s [one]; [one] drawtext=te
 ```
 
 <a name="trim"> </a>
-## Trim a video to five seconds duration
+## Trim a video to five seconds
 ```bash
 ffmpeg -filter_complex 'color=color=white, drawtext=text=%{pts}, trim=duration=10s' count-to-ten.mp4
 ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
@@ -352,13 +355,11 @@ Unfortunately, ffmpeg requires you to use a difference filter for sending comman
 ffmpeg -devices
 ```
 
-`D` means an input device.
-`E` means an output device
-
+`D` means an input device. (demuxer). `E` means an output device (muxer).
 
 You can see more information about defines with [`man ffmpeg-devices`](#man-pages).
 
-> See also: [xv device for video output](#sv), [x11grab device for video input](#x11grab)
+> See also: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
 
 <a name="positioning"> </a>
 # Positioning text
@@ -389,18 +390,18 @@ Here we use an expression in `fontsize` using the `main_h` variable so the font 
 <a name="xv"> </a>
 ## Display output rather than write it to a file
 
-You can use [ffplay (ex)](#ffplay) to write to display a file out the output a filter. But this is a wrapper around features that `ffmpeg` provides.
+You can use [ffplay (example)](#ffplay) to write to display a file out the output a filter. But this is a wrapper around features that `ffmpeg` provides.
 
 ```bash
 ffmpeg -filter_complex 'color=red[red]; color=blue[blue]; [red][blue]xfade=duration=5s, trim=duration=5s' spectrum.webm
 ffmpeg -re  -i spectrum.mp4  -vf 'format=yuv420p' -f xv title
 ```
 
-`-re` tells `ffmpeg` to read the file at normal speed (otherwise ffmpeg would read as fast as possible). `format=yuv420p` converts to a format that `xv` accepts. `-re` does not work when you use [source filters (ex)](#source) for these you have to use the [realtime filter(ex)](#realtime)
+`-re` tells `ffmpeg` to read the file at normal speed (otherwise ffmpeg would read as fast as possible). `format=yuv420p` converts to a format that `xv` accepts. `-re` does not work when you use [source filters (example)](#source) for these you have to use the [realtime filter(example)](#realtime)
 
 <a name="realtime"> </a>
 ## Limit the speed when using xv with filters
-If you do not use the [`-re` property (ex)](#sv) or use [source filters (ex)](#video-source-filters) then by default ffmpeg will run as fast as possible - even when writing to `xv`. You will not be able to watch the output and this will use 100% of the cpu. You can fix this use the [realtime (doc)](https://ffmpeg.org/ffmpeg-filters.html#realtime_002c-arealtime) filter.
+The `xv` video allows ffmpeg to create real time video output. If you do not use the [`-re` filter (example)](#xv) or use [source filters (example)](#video-source-filters) then by default ffmpeg will run as fast as possible - even when writing to `xv`. You will not be able to watch the output and this will use 100% of the cpu. You can fix this use the [realtime (doc)](https://ffmpeg.org/ffmpeg-filters.html#realtime_002c-arealtime) filter.
 
 ```
 ffmpeg -filter_complex 'color=white, drawtext=text=%{pts}:fontsize=h, realtime' -f xv ''
@@ -411,17 +412,21 @@ ffmpeg -filter_complex 'color=white, drawtext=text=%{pts}:fontsize=h, trim=durat
 ffmpeg -i  video.mp4 -vf 'realtime' -f xv ''
 ```
 
-The first example creates a stream counting up using [drawtext (ex)](#drawtext). and then [sends this xv (ex)](#xv). We specify `realtime` as the final filter to play at normal speed.
+The first example creates a stream counting up using [drawtext (example)](#drawtext). and then [sends this xv (example)](#xv). We specify `realtime` as the final filter to play at normal speed.
 
+> **See also**: [Play media with ffplay](#ffplay)
+
+<a name="computer"> </a>
 # Recording your computer
 <a name="capture-window"> </a>
 <a name="capture-specific"> </a>
 ##  Record a specific window using linux
-
 ```bash
 xwininfo
 ffplay -window_id 0x520003e -f x11grab -i ''
 ```
+
+This example works on [linux](#programming), but there are [similar filters for different operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop).
 
 This uses the `-window_id` option which is an option for the x11grab [device](#devices) to record a specific window [on your screen](#capture-screen).
 
@@ -507,7 +512,9 @@ ffmpeg -sample_fmts
 ffmpeg -sinks pulse
 ```
 
-See `man ffmpeg` for details.
+See [`man ffmpeg`](#man-pages) for details.
+
+> See also: [Listing ffmpeg filters (example)](#list-filters) , [Documentation](#documentation)
 
 <a name="audio-engineering"> </a>
 <a name="aevalsrc-sine"> </a>
@@ -534,7 +541,7 @@ ffplay -f lavfi -i 'aevalsrc=exprs=sin((32 + 100* tanh(t/10) ) *t*2*PI)'
 ffplay -f lavfi -i 'aevalsrc=exprs=gte(sin(250 * t * 2 * PI)\, 0)'
 ```
 
-All of these examples use [aevalsrc (ex)](#aevalsrc-sine) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc).
+All of these examples use [aevalsrc (example)](#aevalsrc-sine) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc).
 
 In the second example we use the `sin` to give us something periodic with a known function and then use the greater than or equal function `gte` to turn this into a [square wave (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis).  Note how we escape
 
@@ -542,10 +549,10 @@ In the second example we use the `sin` to give us something periodic with a know
 # Using commands
 See also: [Expressions](#expressions)
 
-[Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(ex)](#parameter-example).
+[Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(example)](#parameter-example).
 
 ## Check parameter can be updated by a command
-The [help for a filter (ex)](#parmaters) display whether a filter can be modified by a command with the letter `C`
+The [help for a filter (example)](#parmaters) display whether a filter can be modified by a command with the letter `C`
 
 ```
 ffmpeg --help filter=drawtext
@@ -646,9 +653,11 @@ FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html)
 # General programming and command-line knowledge
 FFmpeg is a command-line tool written for the kind of user that uses command-line tools. This has certain affordances and norms which ffmpeg will assume and use. Completely covering these concepts would distract from the article and take time. However, I can provide links to certain concepts that someone more interested in ffmpeg from an artistic or practical angle might have.
 
-Once you have derived some value from this guide, you might like to review all these concepts.
+Once you have derived some value from this guide, you might like to review all these concepts to speed up your understanding over others
 
-* [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (ex)](expression-example) [(topic)](#expressions-topic).
+* [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (example)](expression-example) [(topic)](#expressions-topic).
+* FFmpeg provies a [Command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) this is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell) commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
+* [Linux](https://en.wikipedia.org/wiki/Linux) is an operting system that you can use on your system which is often easier to program for but may lack commercial support
 
 
 # About me
