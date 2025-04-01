@@ -1,11 +1,13 @@
-# ffmpeg cookbook
+# FFmpeg cookbook
 *@readwithai - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/)*
 
-This is a beginner's cookbook for the audio-video command-line tool, [ffmpeg](https://www.ffmpeg.org/). It build the readers familiarity with ffmpeg features through examples rather than dry documentation. I created it because I found working out what ffmpeg was doing from snippets slightly too difficult.
+This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds the readers knowledge of ffmpeg features through examples, before providing more applied examples which link back to these learning examples.
 
-ffmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features they become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
+I created it because I found working out what ffmpeg was doing from snippets too difficult and needed to form an understanding based on first principles
 
-This file provides is an [index of features](#features) which goes through different ffmpeg features linked to recipes. `ffmpeg` has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
+FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features they become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
+
+This file provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
 
 # Attribution
 Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in ffmpeg.
@@ -13,10 +15,13 @@ Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [variou
 If you think a particularly recipe belongs in this guide feel free to [add it as an issue](https://github.com/talwrii/ffmpeg-cookbook/issues). It may take me a little time to add recipes as I want to keep the guide accessible to beginners, so bear this in mind when considering the whether submitting me recipes is worth your time!
 
 # Alternatives and prior work
-There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook) but with only a couple of examples. There is [quite complete documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
+There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook) but with only a couple of examples. There is [quite complete reference documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
+
+There are [various books](https://trac.ffmpeg.org/wiki/BooksAndOtherExternalResources) on FFmpeg, including one which is [available for free](https://github.com/jdriselvato/FFmpeg-For-Beginners-Ebook) online
 
 The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering). You can also [ask questions on reddit](https://www.reddit.com/r/ffmpeg).
 
+What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking linking, tries to use an innovative approach to ordering of material. Focuses on exapmles that can be immediately run without material.
 
 # Introduction
 `ffmpeg` has a number of core features that when understood help you do a range on things. This introduction tries to cover most of these core featues.
@@ -28,7 +33,6 @@ The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly 
 ```bash
 ffmpeg -filter_complex 'anullsrc=duration=10s [out]' -map '[out]' -ac 1 silence.wav
 ```
-
 You can play the silence you have created with `ffplay silence.wav`.
 
 This uses the [source filter(doc)](https://ffmpeg.org/ffmpeg-filters.html#toc-Filtering-Introduction), [anullsrc(doc)](https://ffmpeg.org/ffmpeg-filters.html#anullsrc) which generates ten seconds of silence (specified through the `duration` parameter) and then writes this to a stream labelled '[out]'. The `-map` command specifies stream labelled `[out]` is used in the output.
