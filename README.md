@@ -62,7 +62,7 @@ The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-fi
 
 You do not need to use ffplay to play instead you can [use the xv output](#xv)  which can be useful if you have multiple filters.
 
-> See also: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
+> **See also**: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
 
 <a name="write_sine"></a>
 ## Write a sine wave to a file
@@ -72,7 +72,7 @@ ffplay sine.wav
 ```
 Note how this compares to the previous example. This shows how you can convert between filters that play media and those that create a file containing the media.
 
-> See also: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc)
+> **See also**: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc)
 
 <a name="labels"> </a>
 ## Combine two sine waves into a chord.
@@ -161,7 +161,7 @@ You can also run this as `ffplay -f lavfi color=red:duration=10s` since color is
 You can list the available colors with `ffmpeg -colors`.
 
 
-See also: [ffplay vs ffmpeg](#play)
+> **See also**: [ffplay vs ffmpeg](#play)
 
 <a name="image"> </a>
 ## Create an image consisting of solid red
@@ -187,7 +187,7 @@ ffplay -f lavfi 'color=color=red:duration=5s [red]; color=color=blue:duration=5s
 
 We create two streams, one consisting of solid red, the other of solid blue. We then feed both these staerms into the `xfade` filter which "cross-fades" between the two over 5 seconds.
 
-See also: [ffplay vs ffmpeg](#play)
+> **See also**: [ffplay vs ffmpeg](#play)
 
 <a name="comma"> </a>
 <a name="timestamp"> </a>
@@ -215,7 +215,7 @@ Note that we the division operation, `/`, in the expression. `main_w` represents
 
 In the `x` parameter for `drawtext`, [expressions](#expressions) are evaluated using [ffmpeg's own expression language(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions (`sin`, `cos`, etc) and operations (`*`, `/`, `-`, etc).
 
-> See also: [ffplay vs ffmpeg](#play)
+> **See also**: [ffplay vs ffmpeg](#play)
 
 
 <a name="capture-screen"> </a>
@@ -231,7 +231,7 @@ This [section of the wiki of the ffmpeg wiki](https://trac.ffmpeg.org/wiki/Captu
 
 [x11grab](https://www.ffmpeg.org/ffmpeg-devices.html#x11grab) supports various options which can for example be used to capture a section of the screen.
 
-See also: [Recording your computer](#computer), [Record a window](#capture-window), [Record a region of your screen](#capture-region), [list devices](#devices), [ffplay vs ffmpeg](#play)
+> **See also**: [Recording your computer](#computer), [Record a window](#capture-window), [Record a region of your screen](#capture-region), [list devices](#devices), [ffplay vs ffmpeg](#play)
 
 ## Change the size of a video
 ```bash
@@ -243,7 +243,6 @@ ffplay count-resized.webm
 First we create an image with a known size of 1024x512 which [displays the time on the video](#timestamp) using drawtext. We then use the [scale filter](https://ffmpeg.org/ffmpeg-filters.html#scale-1)
 
 Reference: The ffmpeg wiki has a [section on scaling](https://trac.ffmpeg.org/wiki/Scaling)
-See also:
 
 <a name="text"> </a>
 <a name="input-stream"> </a>
@@ -337,7 +336,7 @@ For certain changes over time, particularly "continuous" changes you can use [ex
 
 Note that [audio filters](#asendcmd) and video filters use a different filter to change commands.
 
-> See also: [Section on commands](#commands-topic)
+> **See also**: [Section on commands](#commands-topic)
 
 <a name="asendcmd"> </a>
 <a name="escaping-audio"> </a>
@@ -352,7 +351,7 @@ Here we create a square wave because it [has a lot of overtones (wiki)](https://
 
 Unfortunately, ffmpeg requires you to use a difference filter for sending commands to audio filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd). This example [creates a square wave](#aevalsrc) using an [expression](#expression)
 
-> See also: [Audio engineering](#audio)
+> **See also**: [Audio engineering](#audio)
 <a name="devices"> </a>
 ## List available devices
 ```bash
@@ -363,7 +362,7 @@ ffmpeg -devices
 
 You can see more information about defines with [`man ffmpeg-devices`](#man-pages).
 
-> See also: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
+> **See also**: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
 
 <a name="topics"> </a>
 ## Finishing up
@@ -412,7 +411,7 @@ ffplay region.mp4
 
 This uses [x11grab](#capture-screen) to capture a region selected with the cursor when run (specified by [the option](https://ffmpeg.org/ffmpeg-devices.html#Options-20) `-select_region 1`). Note that `-select_region 1` must come before `-i`
 
-See also: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
+> **See also**: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
 
 
 <a name="positioning"> </a>
@@ -428,7 +427,7 @@ ffplay -f lavfi -i 'color=color=white, drawtext=text=bottom-right:x=main_w - tex
 
 This recipe renders text in various positions. See the [previous recipe](#middle) for the meaning of expressions.
 
-See also: [ffplay vs ffmpeg](#play)
+> **See also**: [ffplay vs ffmpeg](#play)
 
 <a name="scale-text"> </a>
 ## Scaling text to the size of the video
@@ -573,7 +572,7 @@ ffmpeg -sinks pulse
 
 See [`man ffmpeg`](#man-pages) for details.
 
-> See also: [Listing ffmpeg filters (example)](#list-filters) , [Documentation](#documentation)
+> **See also**: [Listing ffmpeg filters (example)](#list-filters) , [Documentation](#documentation)
 
 <a name="commands"> </a>
 <a name="commands-topic"> </a>
@@ -581,7 +580,7 @@ See [`man ffmpeg`](#man-pages) for details.
 
 [Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(example)](#parameter-example).
 
-> See also: [Expressions](#expressions)
+> **See also**: [Expressions](#expressions)
 
 ## Check parameter can be updated by a command
 The [help for a filter (example)](#parmaters) display whether a filter can be modified by a command with the letter `C`
