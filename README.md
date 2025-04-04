@@ -416,10 +416,8 @@ This uses [x11grab](#capture-screen) to capture a region selected with the curso
 > **See also**: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
 
 
-<a name="positioning"> </a>
-<a name="text"> </a>
 
-# Cutting, combining, formatting and joinging
+# Cutting, combining, formatting and joiging
 
 ## Joining video and audio
 ```
@@ -429,13 +427,14 @@ ffmpeg -i warble.wav -i transition.webm combined.mp4
 ffplay combined.webm
 ```
 
-
-
+<a name="text"> </a>
 # Formatting text
 ## Placing text in the middle of the screen
 See the [earlier example](#middle)
 
-## Placing text at difference positions
+
+<a name="positioning"> </a>
+## Placing text at different positions
 ```bash
 ffplay -f lavfi -i 'color=color=white, drawtext=text=bottom-right:x=main_w - text_w:y=(main_h-text_h), drawtext=text=top-left:x=0:y=0, drawtext=text=top-right:x=main_w-text_w:y=0, drawtext=text=bottom-left:x=0:y=main_h - text_h'
 ```
@@ -542,8 +541,26 @@ ffmpeg -i  video.mp4 -vf 'realtime' -f xv ''
 The first example creates a stream counting up using [drawtext (example)](#drawtext). and then [sends this xv (example)](#xv). We specify `realtime` as the final filter to play at normal speed.
 
 > **See also**: [Play media with ffplay](#ffplay)
-
 <a name="external"> </a>
+
+## Playing videos on the terminal with kitty
+There [terminal emulator kitty](https://github.com/kovidgoyal/kitty) extended the the protocol that terminals used that it can render pixels. Some other terminal emulators have adopted this standard. You can use this to display the output from ffmpeg - including videos - diretly in the terminal.
+
+This can be used to display images directly in the terminal. This is partly a cool trick - but it can have some benefits in terms of productivity and avoiding "paper cuts" while working because you does not have to move windows around. For many use cases one might prefer to use streaming to send output to a consistent window.
+
+The utility [timg](https://github.com/hzeller/timg) works well here.
+
+```
+sudo apt-get install timg
+sudo apt-get install kitty
+kitty
+ffmpeg -loglevel 16 -filter_complex 'color=blue, drawtext=text=hi:x=w/3 + w/3*sin(t):y=h/3 + h/3*cos(t):fontsize=h/5' -f webm - | timg -V -
+```
+
+First we install `timg` for play videos in a terminal and `kitty` for a terminal that supports images. We then creating an interesting video using ffmpeg to [render some text (example)](#text) which is animated using an [expression in time (example)](#time-expression) to [change the position of our text (example)](#positioning).
+
+The output is written to [standard output](#programming) using `-` and read from standard in by `timg`. Because there is no file name we must specify the format of the output using `-f`.  We use `-loglevel` 16 to hide output from the terminal which would otherwise get in the way of our image.
+
 ## Controlling FFmpeg externally
 If you are using interesting outputs such as [video output](#xv) or streaming it may make sense to control ffmpeg externally. You can do this using [commands (example)](#command-example) [(doc)](#commands) which can be [controlled from the command line or programs via zmq](#zmq).
 
