@@ -74,12 +74,14 @@ Note how this compares to the previous example. This shows how you can convert b
 
 > **See also**: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc)
 
+<a name="stream-example"> </a>
 <a name="labels"> </a>
 ## Combine two sine waves into a chord.
 ```bash
 ffplay -f lavfi 'sine=frequency=256:duration=10 [one]; sine=frequency=512:duration=5 [two]; [one][two]amix'
 ```
-This creates two streams, `[one]` and `[two]`, which are then mixed together into the output stream by `amix`. `amix` which takes two streams as input and mixes them together.
+
+This creates two streams, `[one]` and `[two]` using the [sine filter (example)](#sine-play), which are then mixed together into the output stream by `amix`. `amix` which takes two streams as input and mixes them together.
 
 <a name="list"> </a>
 <a name="list-filters"> </a>
@@ -213,7 +215,7 @@ We [render text using the drawtext filter](#text) as we did in this previous rec
 
 Note that we the division operation, `/`, in the expression. `main_w` represents the video width, `main_h` its height, `text_w` the rendered text's width and `text_h` its height.
 
-In the `x` parameter for `drawtext`, [expressions](#expressions) are evaluated using [ffmpeg's own expression language(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions (`sin`, `cos`, etc) and operations (`*`, `/`, `-`, etc).
+In the `x` parameter for `drawtext`, [expressions](#expressions-topic) are evaluated using [ffmpeg's own expression language(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) which provides various functions (`sin`, `cos`, etc) and operations (`*`, `/`, `-`, etc).
 
 > **See also**: [ffplay vs ffmpeg](#play)
 
@@ -332,7 +334,7 @@ ffplay -f lavfi -i color@x, sendcmd=commands=1 color@x color blue; 2 color@x col
 
 `color@x` creates a color filter with the name `color@x` which can be used to distinguish different filters.
 
-For certain changes over time, particularly "continuous" changes you can use [expressions with the `t` parameter](#time-expressions) including using the [if expression](#if-expression) - but some commands do not support [expressions](#expressions) and for discrete changes sendcmd can be more useful.
+For certain changes over time, particularly "continuous" changes you can use [expressions with the `t` parameter](#time-expressions) including using the [if expression](#if-expression) - but some commands do not support [expressions](#expressions-topic) and for discrete changes sendcmd can be more useful.
 
 Note that [audio filters](#asendcmd) and video filters use a different filter to change commands.
 
@@ -416,6 +418,19 @@ This uses [x11grab](#capture-screen) to capture a region selected with the curso
 
 <a name="positioning"> </a>
 <a name="text"> </a>
+
+# Cutting, combining, formatting and joinging
+
+## Joining video and audio
+```
+ffmpeg -filter_complex 'aevalsrc=pow(sin(128 * t * 2 * PI)\, sin(t) * sin(t)), atrim=duration=10s' warble.wav
+ffmpeg -filter_complex 'color=white [white]; color=black [black]; [white][black]xfade=duration=10s, trim=duration=10s' transition.webm
+ffmpeg -i warble.wav -i transition.webm combined.mp4
+ffplay combined.webm
+```
+
+
+
 # Formatting text
 ## Placing text in the middle of the screen
 See the [earlier example](#middle)
@@ -438,13 +453,42 @@ ffplay -f lavfi 'color=color=white:size=500x100, drawtext=text=hello:fontsize=ma
 
 Here we use an expression in `fontsize` using the `main_h` variable so the font is the size of the screen. We also use the `size` parameter in color so that the full string fits in the window.
 
+<a name="bold"> </a>
+## Draw bold text
+[drawtext (doc)](https://ffmpeg.org/ffmpeg-filters.html#drawtext-1) offloads the styling of fonts to the [fontconfig library (doc)](https://www.freedesktop.org/wiki/Software/fontconfig/) or a font file that you give it. This means you need to understand ["Font Matching" and "Font Patterns"](https://fontconfig.pages.freedesktop.org/fontconfig/fontconfig-user.html) a little to use fonts.
+
+`fc-match` and `fc-match -a` can be good to search fonts and show the font that will be applied.
+
+```
+ffplay -f lavfi 'color=white, drawtext=text=hello:fontfile=\\:style=Bold:fontsize=h'
+```
+
+This query uses a fontconfig generic query string `:style=Bold` in the `fontflie` field. We need to escape the colon with two backslases. We use the draw text filter (example) as before
+
+
+## Italic text
+
+```
+ffplay -f lavfi 'color=white, drawtext=text=hello:fontfile=\:style=Italic:fontsize=h'
+```
+
+This query uses a fontconfig generic query [like the bold examples (example)](#bold) together with the [drawtext filter to draw text (example)](#text) but the size it Italic
+
+## Draw text in serif font
+```
+ffplay -f lavfi 'color=white, drawtext=text=hello:fontfile=Serif:fontsize=h'
+```
+Again we [use a fontconfig query (example)](#bold). This time we search for the font name.
+
+
+
 <a name="audio"> </a>
 <a name="aevalsrc-sine"> </a>
 <a name="variables-2"> </a>
 # Audio engineering
 FFmpeg is not explicitly designed for audio engineering and there a number of tools better suited for serious engineering. However, `ffmpeg` is performant, convenient for editting videos that need a little engineering and these examples are fun, interactive, and can demostrate features
 ## Generating a sine wave using aevalsrc
-[aevalsrc](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
+[aevalsrc (doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
 
 ```
 ffplay -f lavfi -i 'aevalsrc=exprs=sin((128) *t*2*PI)'
@@ -580,7 +624,7 @@ See [`man ffmpeg`](#man-pages) for details.
 
 [Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(example)](#parameter-example).
 
-> **See also**: [Expressions](#expressions)
+> **See also**: [Expressions](#expressions-topic)
 
 ## Check parameter can be updated by a command
 The [help for a filter (example)](#parmaters) display whether a filter can be modified by a command with the letter `C`
@@ -631,7 +675,7 @@ ffplay -f lavfi -i 'sine=volume=sin(t)'
 At its core, ffmpeg applies filters of input and output in a pipeline of filters.
 There are more filters than this cookbook will cover, you can [list filters](#list) from the commad line.
 
-Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs. Filters take [parameters](#params) which are expressed in the form [`key=value`](#params) and [separated by colon (`:`) characters](#colons). Parameters have an order and you can [omit the paramater name](#omit-name) if parameters are given in this order.
+Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs. Filters take [parameters](#params) which are expressed in the form [`key=value`](#params) and [separated by colon (`:`) characters](#colons). Parameters have an order and you can [omit the paramater name](#omit-name) if parameters are given in this order. For some filters, for some parameters you can use [expressions](#expressions-topic) to calculate a value based on things like the width and height of the frame and the timestamp.
 
 You can connect up filters that take one input stream and have one output stream [using ,](#comma). Alternatively you can create a named stream and write to it by putting this is [square brackets after an expression](#output-filter).
 
@@ -647,34 +691,36 @@ You can [show help for a filter](#filter-help) and [list as filters](#list-filte
 # Expressions
 Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext](#drawtext) has a different expression language using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
 
+You can see the documentation for the shared parts of the expression language (such as functions) with [`man ffmpeg`](#man-pages)
+
 Expressions are useful for "continuous data", but can be rendered discrete using `if`. For discrete variables [commands](#commands-examples) can be more useful. Again filters choose whether a parameter can be updated from a command.
 
 Examples of parameters supporting expressions: [drawtext=x](#drawtext), [aevalsrc=expr](#aevalsrc)
 
+
 It may be useful to understand some [programming concepts](#programming) to use expressions , such as escaping and variables.
+
+
+
 <a name="documentation"> </a>
 # Documentation
 <a name="man-pages"> </a>
 ## Manual pages
-Manual pages run through the command `man` are a commonly used way to provided easy to access documentation from the command-line.
+Manual pages run through the command `man` from the [command-line](#programming) are a commonly used way to provided easy to access documentation from the command-line.
 
-FFmpeg provides various manual pages. You can show these with the command `apropos ffmepg`
+FFmpeg provides various manual pages. You can show these with the command `apropos ffmpeg`. There is online documentation that corresponds to each man page.
 
-Output includes
-
-```
-ffmpeg (1)           - ffmpeg media converter
-ffmpeg-all (1)       - ffmpeg media converter
-ffmpeg-bitstream-filters (1) - FFmpeg bitstream filters
-ffmpeg-codecs (1)    - FFmpeg codecs
-ffmpeg-devices (1)   - FFmpeg devices
-ffmpeg-filters (1)   - FFmpeg filters
-ffmpeg-formats (1)   - FFmpeg formats
-ffmpeg-protocols (1) - FFmpeg protocols
-ffmpeg-resampler (1) - FFmpeg Resampler
-ffmpeg-scaler (1)    - FFmpeg video scaling and pixel format converter
-ffmpeg-utils (1)     - FFmpeg utilities
-```
+* [ffmpeg](https://ffmpeg.org/ffmpeg.html)
+* [ffmpeg-all](https://ffmpeg.org/ffmpeg-all.html)
+* [ffmpeg-bitstream-filters](https://ffmpeg.org/ffmpeg-bitstream-filters.html)
+* [ffmpeg-codecs](https://ffmpeg.org/ffmpeg-doecs.html)
+* [ffmpeg-devices](https://ffmpeg.org/ffmpeg-devices.html)
+* [ffmpeg-filters](https://ffmpeg.org/ffmpeg-filters.html)
+* [ffmpeg-formats](https://ffmpeg.org/ffmpeg-formats.html)
+* [ffmpeg-protocols](https://ffmpeg.org/ffmpeg-protocols.html)
+* [ffmpeg-resampler](https://ffmpeg.org/ffmpeg-resampler.html)
+* [ffmpeg-scaler](https://ffmpeg.org/ffmpeg-scaler.html)
+* [ffmpeg-utils](https://ffmpeg.org/ffmpeg-utils.html)
 
 ## Web pages
 FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html). See [alternatives](#alternatives) for documentation similar to this.
@@ -689,6 +735,7 @@ Once you have derived some value from this guide, you might like to review all t
 * [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (example)](expression-example) [(topic)](#expressions-topic).
 * FFmpeg provies a [Command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) this is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell) commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 * [Linux](https://en.wikipedia.org/wiki/Linux) is an operting system that you can use on your system which is often easier to program for but may lack commercial support
+* [man](https://en.wikipedia.org/wiki/Man_page) is a command line tool available on many operating systems like linux and mac that can be used to quickly obtain documentation from the command-line
 
 
 # About me
