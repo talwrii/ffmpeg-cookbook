@@ -1,11 +1,12 @@
 Copyright @readwithai, 2025
 
-By default copyright law gives you no right to copy or share material apart from through fair use. I as the author of this piece am giving you (fairly broad) permission to copy and modify this material through this license but want to maintain attribution to me and some form of "advertisement" of other parts of my work... which I want because I want to influence the world and need attention and money to do so! This in general is necessary to incentivise and allow me to do the work I want to do.
+By default copyright law gives you no right to copy or share material apart from through fair use. 
+I as the author of this piece am giving you (fairly broad) permission to copy and modify this material through this license but want to maintain attribution to me and some form of "advertisement" of other parts of my work... which I want because I want to influence the world and need attention and money to do so! This in general is necessary to incentivise and allow me to do the work I want to do.
 
-You can copy and share this document without modification as much as you want.
+You can copy and distribute this document without modification as much as you want.
 
-If you modify this document and share it you must:
- i. indicate that it has been modified at the beginning of document
+If you modify this document and distribute it you must:
+ i. Indicate that it has been modified at the beginning of document
  ii. Include a link to the original document by @readwithai a the beginning of the document
  iii. Maintain header and the beginning of the document with its original links to social media.
  iv. Maintain the footer about @readwithai at the bottom together with it links.
