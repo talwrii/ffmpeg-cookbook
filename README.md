@@ -131,7 +131,7 @@ ffplay concat.wav
 We [create two sine waves](#write-sine) like in the prevoius recipes. We then combine together the first (`[0]`) and second (`[1]`) inputs with the `concat` filter. We must specify that concat outputs no video streams and one audio stream because these are not the defaults: concat works with one video stream by default.
 
 
-Here is the documentation for concat:
+Here is the documentation for `concat`:
 
 ```
 > ffmpeg --help filter=concat
