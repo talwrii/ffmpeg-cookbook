@@ -1,18 +1,16 @@
 # FFmpeg cookbook
 *@readwithai - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/)*
 
-This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds the readers knowledge of ffmpeg features through examples, before providing more applied examples which link back to these learning examples. You probably want to jump to the [introduction](#introduction).
+This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds up the reader's knowledge of FFmpeg's features through examples, before providing more applied examples which link back to early examples to aid understanding and adaptation. You may now  want to jump to the [introduction](#introduction).
 
-I created it because I found working out what ffmpeg was doing from snippets too difficult and needed to form an understanding based on first principles
+I created this guidd because I found working out hoe FFmpeg worked from snippets too difficult and needed to form an understanding from first principles. FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features, these features become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
 
-FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features they become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
-
-This giude provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
+This guide provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
 
 # Attribution
-Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in ffmpeg.
+Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in FFmpeg.
 
-If you think a particularly recipe belongs in this guide feel free to [add it as an issue](https://github.com/talwrii/ffmpeg-cookbook/issues). It may take me a little time to add recipes as I want to keep the guide accessible to beginners, so bear this in mind when considering the whether submitting me recipes is worth your time!
+If you think a particularly recipe belongs in this guide, feel free to [add it as an issue](https://github.com/talwrii/ffmpeg-cookbook/issues). It may take me a little time for me to add recipes as I want to keep the guide accessible to beginners, so bear this in mind when considering the whether submitting me recipes is worth your time!
 
 <a name="alternatives"> </a>
 # Alternatives and prior work
