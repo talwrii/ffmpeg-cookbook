@@ -120,7 +120,6 @@ This creates a file containing a sine wav and then use the `volume` filter to de
 <a name="concat"> </a>
 <a name="concat-stream"> </a>
 ## Concatenate two audio files together
-
 ```bash
 ffmpeg -filter_complex 'sine=frequency=512:duration=2' sine1.wav
 ffmpeg -filter_complex 'sine=frequency=256:duration=5' sine2.wav
@@ -174,11 +173,14 @@ Here we specify that we are reading one frame with `-frames:v 1`.
 
 ## Write ten seconds of red to a file
 ```bash
-ffmpeg -filter_complex 'color=color=red:duration=10s'  red.mp4
+ffmpeg -filter_complex 'color=color=red:duration=10s' red.mp4
 ```
 
-We use the color
+We use the [color filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) togethet with the duration parameter of ten seconds and the color parameter of red. 
 
+We use `-filter_complex` because there is no input file since `color` is a source filter. We specify the output files as `red.mp4`.
+
+<a name="fade"> </a>
 <a name="video-source-filter"> </a>
 ## Create a video that fades between two colours
 ```bash
@@ -275,7 +277,7 @@ ffmpeg -filter_complex 'color=color=white, drawtext=text=hello:fontsize=40' -v:f
 ffmpeg -i static.png  -filter_complex 'nullsrc=duration=5s [vid]; [vid][0]overlay' out.mp4
 ```
 
-First we [create an image](#image) using the `-vframe` option. We then create a 5 second empty video using the `nullsrc` filter and overlay the static image on it.
+First we [create an image](#image) using the `-v:frame` option. We then create a 5 second empty video using the `nullsrc` filter and overlay the static image on it.
 
 ## Concatenate two videos together
 ```bash
@@ -284,7 +286,7 @@ ffmpeg -filter_complex 'color=color=white:duration=5s, drawtext=text=%{pts}, rev
 ffmpeg -i count-up.mp4 -i count-down.mp4  -filter_complex '[0][1]concat' concat.mp4
 ```
 
-First we create two videos one that [counts up to ten seconds](#timestamp), and then the reverse of this using the [reverse](https://ffmpeg.org/ffmpeg-filters.html#reverse) filter.
+First we create two videos one that [counts up to ten seconds](#timestamp), and then the reverse of this using the [reverse (doc)](https://ffmpeg.org/ffmpeg-filters.html#reverse) filter.
 
 We then use the concat filter (as we did for [audio](#concat)) but this time we do not need to use concat - since the default output is a single video stream and no audio stream.
 
@@ -298,7 +300,6 @@ ffmpeg  -i static.png -i video.mp4 -filter_complex 'nullsrc=duration=2s, [0]over
 First we create a static image with the word hello and a video which fades from red to green. Then we combine the two [overlaying the static image](#static-image) on a 2 second video and call it intro. This is concatenated with a video.
 
 ## Add a logo to the corner of a picture
-
 ```bash
 ffmpeg -filter_complex 'color=white:size=100x100, drawtext=text=L:fontsize=h' -frames:v 1 logo.png
 ffmpeg -filter_complex 'color=red [red]; color=blue [blue]; [red][blue]xfade=duration=5s, trim=duration=5s' video.webm
@@ -306,7 +307,11 @@ ffmpeg -i video.webm -i logo.png -filter_complex '[0][1]overlay=x=W-w:y=H-h' fin
 ffplay final.webm
 ```
 
-We [create an image](#image) consisting of an L, [scaled](#scale-text) to the size of the log.
+We [create an image (example)](#image) consisting of the letter L, [scaled (example)](#scale-text) to the size of the image. We then create an [image fading between colours (example)](#fade). These act as input for our main filter. 
+
+We then input both these files into FFmpeg. We must use `-filter_complex` because we have two inputs.
+
+We place the logo over the image using the overlay filter by specifing the `x` and `y` parameter. These are [expressions](#expressions) using the variables `W`, `w`, `H` and `h` for the weights and heights of the first and second images. 
 
 ## Add music to a video
 ```
