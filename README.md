@@ -14,7 +14,7 @@ If you think a particularly recipe belongs in this guide, feel free to [add it a
 
 <a name="alternatives"> </a>
 # Alternatives and prior work
-There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook) but with only a couple of examples. There is [quite complete reference documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
+There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook), as does  [Lorna Jane](https://lornajane.net/posts/2014/my-ffmpeg-cookbook) but these only a few examples. There is [quite complete reference documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
 
 There are [various books](https://trac.ffmpeg.org/wiki/BooksAndOtherExternalResources) on FFmpeg, including one which is [available for free](https://github.com/jdriselvato/FFmpeg-For-Beginners-Ebook) online
 
@@ -153,7 +153,7 @@ concat AVOptions:
 ffplay -f lavfi color=color=red:duration=10s
 ```
 
-Here we use the [color filter(doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) together with the color name of `red` and a `duration` of 10s.
+Here we use the [color filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) together with the color name of `red` and a `duration` of 10s.
 
 You can also run this as `ffplay -f lavfi color=red:duration=10s` since color is a default parameter.
 
@@ -176,7 +176,7 @@ Here we specify that we are reading one frame with `-frames:v 1`.
 ffmpeg -filter_complex 'color=color=red:duration=10s' red.mp4
 ```
 
-We use the [color filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) togethet with the duration parameter of ten seconds and the color parameter of red. 
+We use the [color filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) togethet with the duration parameter of ten seconds and the color parameter of red.
 
 We use `-filter_complex` because there is no input file since `color` is a source filter. We specify the output files as `red.mp4`.
 
@@ -307,11 +307,11 @@ ffmpeg -i video.webm -i logo.png -filter_complex '[0][1]overlay=x=W-w:y=H-h' fin
 ffplay final.webm
 ```
 
-We [create an image (example)](#image) consisting of the letter L, [scaled (example)](#scale-text) to the size of the image. We then create an [image fading between colours (example)](#fade). These act as input for our main filter. 
+We [create an image (example)](#image) consisting of the letter L, [scaled (example)](#scale-text) to the size of the image. We then create an [image fading between colours (example)](#fade). These act as input for our main filter.
 
 We then input both these files into FFmpeg. We must use `-filter_complex` because we have two inputs.
 
-We place the logo over the image using the overlay filter by specifing the `x` and `y` parameter. These are [expressions](#expressions) using the variables `W`, `w`, `H` and `h` for the weights and heights of the first and second images. 
+We place the logo over the image using the overlay filter by specifing the `x` and `y` parameter. These are [expressions](#expressions) using the variables `W`, `w`, `H` and `h` for the weights and heights of the first and second images.
 
 ## Add music to a video
 ```
