@@ -3,9 +3,9 @@
 
 This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds up the reader's knowledge of FFmpeg's features through examples, before providing more applied examples which link back to early examples to aid understanding and adaptation. You may now  want to jump to the [introduction](#introduction).
 
-I created this guidd because I found working out hoe FFmpeg worked from snippets too difficult and needed to form an understanding from first principles. FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features, these features become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
+I created this guide because I found working out hoe FFmpeg worked from snippets too difficult and needed to form an understanding from first principles. FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features, these features become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
 
-This guide provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html).
+This guide provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html). I try to label links with `(example)` if they link to an earlier example of a feature or `(doc)` if they link to external documentation.
 
 # Attribution
 Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in FFmpeg.
@@ -148,6 +148,7 @@ concat AVOptions:
 ```
 
 <a name="params"> </a>
+<a name="solid-color"> </a>
 ## Play ten seconds of red
 ```bash
 ffplay -f lavfi color=color=red:duration=10s
@@ -163,13 +164,15 @@ You can list the available colors with `ffmpeg -colors`.
 > **See also**: [ffplay vs ffmpeg](#play)
 
 <a name="image"> </a>
+<a name="frames"> </a>
 ## Create an image consisting of solid red
 ```bash
 ffmpeg -filter_complex 'color=color=red' -frames:v 1  red.png
 ffplay red.png
 ```
-
 Here we specify that we are reading one frame with `-frames:v 1`.
+
+> **See also**: [Working with images](#images), [Extract a frame](#ts-frame)
 
 ## Write ten seconds of red to a file
 ```bash
@@ -194,6 +197,7 @@ We create two streams, one consisting of solid red, the other of solid blue. We 
 <a name="comma"> </a>
 <a name="timestamp"> </a>
 <a name="drawtext"> </a>
+<a name="count"> </a>
 ## Create a video that counts up to 10
 ```bash
 ffplay -f lavfi -i  'color=color=white, drawtext=text=%{pts}'
@@ -206,7 +210,7 @@ See the [section on positioning text](#positioning)
 <a name="middle"> </a>
 <a name="variables-1"> </a>
 <a name="expression-example"> </a>
-## Placing text in the middle of the screen
+## Place text in the middle of the screen
 ```bash
 ffplay -f lavfi -i 'color=color=white, drawtext=text=hello:x=(main_w - text_w) / 2:y=(main_h-text_h) /2'
 ```
@@ -235,6 +239,7 @@ This [section of the wiki of the ffmpeg wiki](https://trac.ffmpeg.org/wiki/Captu
 
 > **See also**: [Recording your computer](#computer), [Record a window](#capture-window), [Record a region of your screen](#capture-region), [list devices](#devices), [ffplay vs ffmpeg](#play)
 
+<a name="scale"> </a>
 ## Change the size of a video
 ```bash
 ffmpeg -filter_complex 'color=color=white:size=1024x512:duration=5s, drawtext=text=%{pts}:fontsize=h' count.webm
@@ -242,9 +247,11 @@ ffmpeg -i count.webm -filter_complex 'scale=512:256' count-resized.webm
 ffplay count-resized.webm
 ```
 
-First we create an image with a known size of 1024x512 which [displays the time on the video](#timestamp) using drawtext. We then use the [scale filter](https://ffmpeg.org/ffmpeg-filters.html#scale-1)
+First we create an image with a known size of 1024x512 which [displays the time on the video (example)](#timestamp) using drawtext. We then use the [scale filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#scale-1) to scale to a given size. Here we [omit the names (example)](#omit-name) of parameters of the `width` and `height` parameters of scale
 
-Reference: The ffmpeg wiki has a [section on scaling](https://trac.ffmpeg.org/wiki/Scaling)
+You can replace one of the `width` or `height` parameters with `-1` to make FFmpeg calculate this parameter based on [aspect ratio](#video-glossary).
+
+> **Reference**: The FFmpeg wiki has a [section on scaling](https://trac.ffmpeg.org/wiki/Scaling)
 
 <a name="text"> </a>
 <a name="input-stream"> </a>
@@ -420,15 +427,37 @@ This uses [x11grab](#capture-screen) to capture a region selected with the curso
 
 
 
-# Cutting, combining, formatting and joiging
-
-## Joining video and audio
+# Cutting, combining, formatting and joining
+## Combining video and audio
 ```
 ffmpeg -filter_complex 'aevalsrc=pow(sin(128 * t * 2 * PI)\, sin(t) * sin(t)), atrim=duration=10s' warble.wav
 ffmpeg -filter_complex 'color=white [white]; color=black [black]; [white][black]xfade=duration=10s, trim=duration=10s' transition.webm
 ffmpeg -i warble.wav -i transition.webm combined.mp4
 ffplay combined.webm
 ```
+
+<a name="xstack-zero-index"> </a>
+## Combine two videos with different sizes
+```
+ffmpeg -filter_complex 'color=red:size=200x100, trim=duration=10s' red.mp4
+ffmpeg -filter_complex 'color=blue:size=300x400, trim=duration=10s' blue.mp4
+ffmpeg -i red.mp4 -i blue.mp4 -filter_complex '[0][1]xstack=layout=0_0|w0_0:fill=black' combined.mp4
+```
+Here we create two vidoes [consisting of solid colour (example)](#solid-color) which are ten seconds long but with different sizes. The first is red and 200 pixels wide and 100 pixels wide. The second is blue and 300 pixels wide and 400 pixels high.
+
+We then combine these together with the [xstack (doc)](https://ffmpeg.org/ffmpeg-filters.html#xstack-1). `xstack` works by drawing videos into an imaginary canvas. The `layout` parameter specifies the top left coordinate of the recentangle for each source using the variables `w0`, `h0`, `w1`, `h1` ... etc for the width and heights of images. Somewhat confusingly the indexes start at 0 rather than 1 (this is referred to as [zero-based numbering](#zero-indexing)).
+
+So this example the first image is display at `(0, 0)` and the second image is placed to the right of the image but at the same height at `(first_source_width, 0)`.
+
+If we wanted to reverse this so that the second image is drawn first then the second image we could use the following expression:
+
+`ffmpeg -i red.mp4 -i blue.mp4 -filter_complex '[0][1]xstack=layout=w1_0|0_0:fill=black' combined.mp4`
+
+If images have matching dimensions you can use the [hstack (example)](#hstack) or [vstack (doc)](https://ffmpeg.org/ffmpeg-filters.html#vstack-1) filters for this.
+
+> **Reference**: The FFmpeg wiki has [a section on xstack](https://trac.ffmpeg.org/wiki/Create%20a%20mosaic%20out%20of%20several%20input%20videos%20using%20xstack) together with diagrams.
+
+> **See also**: [Pixel](#av-concepts), [coordinates](#av-concepts)
 
 <a name="text"> </a>
 # Formatting text
@@ -469,7 +498,6 @@ This query uses a fontconfig generic query string `:style=Bold` in the `fontflie
 
 
 ## Italic text
-
 ```
 ffplay -f lavfi 'color=white, drawtext=text=hello:fontfile=\:style=Italic:fontsize=h'
 ```
@@ -483,6 +511,21 @@ ffplay -f lavfi 'color=white, drawtext=text=hello:fontfile=Serif:fontsize=h'
 Again we [use a fontconfig query (example)](#bold). This time we search for the font name.
 
 
+# Working with images
+FFmpeg provides filters to operate on video streams and audio streams and to combine these streams together into files. However, because an image is a video containing one frame FFmpeg can also operate on images.
+
+Some of the image based functionality which FFmpeg provides is analogous to the [Imagemagick](https://imagemagick.org/script/command-line-processing.php). Imagemagick only operates on images, so if you learn FFmpeg then what you have learned will also apply to videos. However, imagemagic has more features. Animated GIFs and webm images are examples of some "video functionalityt" that imagemagick provides.
+
+In general, if you want to output an image you can [use the `-frames:v 1` option (exampel)](#frames) to extract and image.
+
+<a name="ts-frame"> </a>
+## Extract a frame from a video
+```
+ffmpeg -filter_complex 'color=color=white, drawtext=text=%{pts}, trim=duration=10s' counting.mp4
+ffmpeg -i counting.mp4 -vf 'trim=start=4s' -frames:v 1  four.png
+```
+
+First we [generate a video that counts up (example)](#count) to sample from. Then we use the [trim filter (example)](#trim) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#trim) filter to skip to four seconds into the video (using the `start`) option. We use the `frames:v` option to [extract a single frame (example)](#frames) and save this in a png.
 
 <a name="audio"> </a>
 <a name="aevalsrc-sine"> </a>
@@ -571,6 +614,7 @@ If you are using interesting outputs such as [video output](#xv) or streaming it
 # Writing more readable filters
 Readability can be a bit of a trade off. What is easier to read for an expert may involve complexity for the new user. Code readability has an audience like writing does. There are various approaches to change how filters which can
 
+<a name="hstack"> </a>
 ## Using source filters as input
 In some examples, we use complex filters with -filter_complex to support [source filters](source-filters). These will often be [labelled](#labels). You can simplify filters by using command-line parameters instead, which you may consider more readable - it certainly produces a shorter filter and the filter is quoted.
 
@@ -756,7 +800,15 @@ Once you have derived some value from this guide, you might like to review all t
 * FFmpeg provies a [Command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) this is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell) commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 * [Linux](https://en.wikipedia.org/wiki/Linux) is an operting system that you can use on your system which is often easier to program for but may lack commercial support
 * [man](https://en.wikipedia.org/wiki/Man_page) is a command line tool available on many operating systems like linux and mac that can be used to quickly obtain documentation from the command-line
+* [zero-based based numbering](https://en.wikipedia.org/wiki/Zero-based_numbering). Some filters such as [xstack] start counting from 0 for some values.
 
+<a name="av-concepts"> </a>
+# General audio visual concepts
+This guide assumes understanding of certain concepts related to images and videos. We will note cover this material but this provides a glossary.
+
+* [Aspect ratios (wiki)](https://en.wikipedia.org/wiki/Aspect_ratio_(image)) describes the ratio of the width of an image or video to its height. When [scaling (example)](#scale) you may wish to maintain the aspect ratio.
+* [Pixels](https://en.wikipedia.org/wiki/Pixel) an image consists of a grid of pixels each of which is a certain colour.
+* [Coordinate](https://en.wikipedia.org/wiki/Coordinate_system) pixels in an image can be labelled with horizontal distance from the left edge and the vertical image from the top of the image.
 
 # About me
 I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
