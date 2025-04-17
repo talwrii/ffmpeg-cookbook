@@ -638,7 +638,7 @@ ffmpeg -f lavfi -i 'color=red' -f lavfi -i 'color=green' -f lavfi -i 'color=blue
 
 This commands uses [`-f lavfi`](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video.
 
-## Composing your filtergraph in a file
+## Creating a filtergraph in a file
 With `-filter_complex_script`, you can read a filter specification ("filter graph") from a file.
 
 ```bash
