@@ -358,12 +358,12 @@ Note that [audio filters](#asendcmd) and video filters use a different filter to
 ffplay -f lavfi -i  "aevalsrc=exprs=0.2 * gte(sin(128 * t * 2 * PI)\,0), bandpass=frequency=250, asendcmd=commmands='2 bandpass frequency 100'"
 ```
 
-This is similar to the [previous example](#command-example) but for an audio filter.
+This example is similar to the [previous one](#command-example) but for an audio filter rather than a video filter.
 
-Here we create a square wave because it [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the aevalsrc filter that allows one to specific a formula, that we send through a bandpass filter. This is then sent into asendcmd which has a command to change the frequency of the bandpass signal at two seconds.
+We create a square wave because these [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the [aevalsrc filter (example)](#aevalsrc) with [an expression](#expression) that allows one to specific a formula, that we send through a bandpass filter. This wave is then sent into asendcmd which has a command to change the frequency of the bandpass signal after two seconds.
 
-Unfortunately, ffmpeg requires you to use a difference filter for sending commands to audio filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd). This example [creates a square wave](#aevalsrc) using an [expression](#expression)
-
+Unfortunately, FFmpeg requires you to use a different filter for sending commands to audio filters thsn video filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd).
+ 
 > **See also**: [Audio engineering](#audio)
 <a name="devices"> </a>
 ## List available devices
@@ -377,7 +377,7 @@ You can see more information about defines with [`man ffmpeg-devices`](#man-page
 
 > **See also**: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
 
-<a name="topics"> </a>
+
 
 ## Create a grid of 16 frames taken from the video
 ```
@@ -389,6 +389,7 @@ ffplay grid.png
 We first create an interesting (or sufficiently interesting for our cases here) image of the current timestamp moving in a circle. We then extract out two frames a second by setting the [rate parameter, -r, (doc)](https://ffmpeg.org/ffmpeg.html#toc-Video-Options) to 2 frames per second and outputting each frame to file by using a filename of `orbit-%02d.png` in the name. This is a format string for the [printf](#programming) function in the programming language. the %02d means that e.g. the 9th frame is wring to the file `orbit-09.png`.
 In the next expression we use some command-line magic to run `ffmpeg -i orbit-01.png -i orbit-02.png ...` before horizontally stacking all of the images into rows with [hstack (example)](https://ffmpeg.org/ffmpeg-filters.html#hstack) and vertically stacking these rows with vstack. Each of these commands takes four [inputs (example)](#two-inputs). We specify the [default parameter (example)](#omit-names) `inputs` of each to 4.
 
+<a name="topics"> </a>
 ## Finishing up
 Hopefully this introduction has introduced to a broad range of how ffmpeg works and what it can do through examples. The rest of the guide covers topics in the style of a more traditional cookbook.
 
@@ -437,9 +438,7 @@ This uses [x11grab](#capture-screen) to capture a region selected with the curso
 
 > **See also**: [Record a specific window](#specific-window), [record the screen](#capture-screen), [List devices](#devices)
 
-
-
-# Cutting, combining, formatting and joining
+# Cutting, combining and formatting
 ## Combining video and audio
 ```
 ffmpeg -filter_complex 'aevalsrc=pow(sin(128 * t * 2 * PI)\, sin(t) * sin(t)), atrim=duration=10s' warble.wav
