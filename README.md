@@ -117,6 +117,7 @@ ffplay quiet-sine.wav
 
 This creates a file containing a sine wav and then use the `volume` filter to decrease the volume to 50% of the original volumen. Because we are using a filter that has precisely one input and output, we can use `-af` rather than `-filter_complex`, but `-filter_complex` would still work.
 
+<a name="two-streams"> </a>
 <a name="concat"> </a>
 <a name="concat-stream"> </a>
 ## Concatenate two audio files together
@@ -377,6 +378,17 @@ You can see more information about defines with [`man ffmpeg-devices`](#man-page
 > **See also**: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
 
 <a name="topics"> </a>
+
+## Create a grid of 16 frames taken from the video
+```
+ffmpeg  -filter_complex 'color=white, drawtext=text=%{pts}:x=w/2 + 0.6*w/2*sin((t / 8) * 2 * PI):y=h/2 + 0.6 * h/2*cos((t/8) * 2 * PI), drawbox=w=iw:h=ih:color=red, trim=duration=8s' orbit.mp4
+ffmpeg -i orbit.mp4 -r 2 orbit-%02d.png
+ls orbit-*.png  | sed 's/^/-i /' | xargs  ffmpeg -y -filter_complex '[0][1][2][3]hstack=4 [row1]; [4][5][6][7] hstack=4[row2]; [8][9][10][11]hstack=4[row3]; [12][13][14][15]hstack=4 [row4]; [row1][row2][row3][row4] vstack=4' -f apng  grid.png
+ffplay grid.png
+```
+We first create an interesting (or sufficiently interesting for our cases here) image of the current timestamp moving in a circle. We then extract out two frames a second by setting the [rate parameter, -r, (doc)](https://ffmpeg.org/ffmpeg.html#toc-Video-Options) to 2 frames per second and outputting each frame to file by using a filename of `orbit-%02d.png` in the name. This is a format string for the [printf](#programming) function in the programming language. the %02d means that e.g. the 9th frame is wring to the file `orbit-09.png`.
+In the next expression we use some command-line magic to run `ffmpeg -i orbit-01.png -i orbit-02.png ...` before horizontally stacking all of the images into rows with [hstack (example)](https://ffmpeg.org/ffmpeg-filters.html#hstack) and vertically stacking these rows with vstack. Each of these commands takes four [inputs (example)](#two-inputs). We specify the [default parameter (example)](#omit-names) `inputs` of each to 4.
+
 ## Finishing up
 Hopefully this introduction has introduced to a broad range of how ffmpeg works and what it can do through examples. The rest of the guide covers topics in the style of a more traditional cookbook.
 
@@ -526,6 +538,8 @@ ffmpeg -i counting.mp4 -vf 'trim=start=4s' -frames:v 1  four.png
 ```
 
 First we [generate a video that counts up (example)](#count) to sample from. Then we use the [trim filter (example)](#trim) [(doc)](https://ffmpeg.org/ffmpeg-filters.html#trim) filter to skip to four seconds into the video (using the `start`) option. We use the `frames:v` option to [extract a single frame (example)](#frames) and save this in a png.
+
+
 
 <a name="audio"> </a>
 <a name="aevalsrc-sine"> </a>
@@ -801,6 +815,7 @@ Once you have derived some value from this guide, you might like to review all t
 * [Linux](https://en.wikipedia.org/wiki/Linux) is an operting system that you can use on your system which is often easier to program for but may lack commercial support
 * [man](https://en.wikipedia.org/wiki/Man_page) is a command line tool available on many operating systems like linux and mac that can be used to quickly obtain documentation from the command-line
 * [zero-based based numbering](https://en.wikipedia.org/wiki/Zero-based_numbering). Some filters such as [xstack] start counting from 0 for some values.
+* [printf](https://en.wikipedia.org/wiki/Printf) is a way of formatting data into text used in C as well as other languages.
 
 <a name="av-concepts"> </a>
 # General audio visual concepts
