@@ -18,7 +18,7 @@ There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/f
 
 There are [various books](https://trac.ffmpeg.org/wiki/BooksAndOtherExternalResources) on FFmpeg, including one which is [available for free](https://github.com/jdriselvato/FFmpeg-For-Beginners-Ebook) online
 
-The [ffmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering). You can also [ask questions on reddit](https://www.reddit.com/r/ffmpeg).
+The [FFmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering). You can also [ask questions on reddit](https://www.reddit.com/r/ffmpeg).
 
 What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking linking, tries to use an innovative approach to ordering of material. Focuses on exapmles that can be immediately run without material.
 
@@ -88,9 +88,9 @@ This creates two streams, `[one]` and `[two]` using the [sine filter (example)](
 ffmpeg -filters
 ```
 
-This command list all available filters together with some information about that. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
+This command lists all available filters together with some information about each filtet. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
 
-Filters are listed in the filters [manual page](#man-pages) `man ffmpeg-filters`.
+Filters are listed in the filters [manual page](#man-pages): `man ffmpeg-filters`.
 
 > **See also:**: [About filters](#filters-abstract)
 
