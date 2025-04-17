@@ -619,24 +619,26 @@ ffmpeg -loglevel 16 -filter_complex 'color=blue, drawtext=text=hi:x=w/3 + w/3*si
 
 First we install `timg` for play videos in a terminal and `kitty` for a terminal that supports images. We then creating an interesting video using ffmpeg to [render some text (example)](#text) which is animated using an [expression in time (example)](#time-expression) to [change the position of our text (example)](#positioning).
 
-The output is written to [standard output](#programming) using `-` and read from standard in by `timg`. Because there is no file name we must specify the format of the output using `-f`.  We use `-loglevel` 16 to hide output from the terminal which would otherwise get in the way of our image.
+The output is written to [standard output](#programming), as specified by  `-`,  and then read from standard in by `timg`. Because there is no file name we must specify the format of the output stream using `-f`.  We use `-loglevel 16` to hide logging about FFmpegs normal operation which would otherwise get in the way of the video playing in your terminal.
 
 ## Controlling FFmpeg externally
-If you are using interesting outputs such as [video output](#xv) or streaming it may make sense to control ffmpeg externally. You can do this using [commands (example)](#command-example) [(doc)](#commands) which can be [controlled from the command line or programs via zmq](#zmq).
+If you are using realtime outputs such as [X11 video output](#xv) or streaming it may make sense to control FF mpeg externally. You can do this using [commands (example)](#command-example) which can be [controlled from the command line or programs via zmq](#zmq).
 
 <a name="readability"> </a>
 # Writing more readable filters
-Readability can be a bit of a trade off. What is easier to read for an expert may involve complexity for the new user. Code readability has an audience like writing does. There are various approaches to change how filters which can
+The readability of code can be a bit of a trade off. What is easier to read for an expert may use concepts that the new user finds difficult to grasp. Code has an audience like prose, and the features used should cater for this audience. There are various approaches to change how filters which may improve readability.
 
 <a name="hstack"> </a>
 ## Using source filters as input
-In some examples, we use complex filters with -filter_complex to support [source filters](source-filters). These will often be [labelled](#labels). You can simplify filters by using command-line parameters instead, which you may consider more readable - it certainly produces a shorter filter and the filter is quoted.
+In some examples, we use complex filters with -`filter_complex` to support [source filters](source-filters). The output of source filters will often be [labelled](#labels). You may be able to simplify suchs filters by moving parts of the filter out of the main filter and into an input source of lavfi type. 
+
+Here is an example"
 
 ```bash
 ffmpeg -f lavfi -i 'color=red' -f lavfi -i 'color=green' -f lavfi -i 'color=blue' -filter_complex '[0][1][2]hstack=inputs=3, trim=duration=5s' stacked.mp4
 ```
 
-This commands uses [`-f lavfi`](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video.
+This command uses [`-f lavfi`](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video.
 
 ## Creating a filtergraph in a file
 With `-filter_complex_script`, you can read a filter specification ("filter graph") from a file.
@@ -650,14 +652,16 @@ ffplay red.mp4
 ## Omitting parameter names
 Parameters have an order that can you can view with `ffmpeg --help filter=color`. If you provide parameters in this order then you can omit the parameter name.
 
+Here is an example:
+
 ```bash
 ffmpeg --help filter=color
 ffplay -f lavfi -i 'color=white:100x100'
 ```
 
-Here we output a video with solid colour which a colour of `white` and a `size` of `100x100`.
+We output a video with solid colour witj a colour of `white` and `size` of `100x100`. We can omit both parameter names since the first parameter is `color` and the second is `size`.
 
-Here is some of the output from `ffmpeg --help filter=color`. Notice the order of parameters and the duplicate names:
+Here is some of the output from `ffmpeg --help filter=color`. Notice the order of parameters and the fact that some parameters have aliases which do not form part of the parameter order.
 
 ```
 color AVOptions:
@@ -675,7 +679,7 @@ color AVOptions:
 <a name="reflection"> </a>
 # Getting information about FFmpeg
 ## Listing objects
-ffmpeg have various types of object. These can be queried.
+FFmpeg has various types of objects that form part of commands. These objects can be listed like so:
 
 ```bash
 ffmpeg -colors
@@ -694,24 +698,23 @@ ffmpeg -sinks pulse
 
 See [`man ffmpeg`](#man-pages) for details.
 
-> **See also**: [Listing ffmpeg filters (example)](#list-filters) , [Documentation](#documentation)
+> **See also**: [Listing ffmpeg filters (example)](#list-filters) , [FFmpeg documentation](#documentation)
 
 <a name="commands"> </a>
 <a name="commands-topic"> </a>
 # Using commands
-
-[Commands](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([ex](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters(example)](#parameter-example).
+[Commands (doc](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) ([example](#command-example)) are a general mechanism to modify the behaviour of filters while they are running such as by changing the value of [parameters (example)](#parameter-example).
 
 > **See also**: [Expressions](#expressions-topic)
 
-## Check parameter can be updated by a command
-The [help for a filter (example)](#parmaters) display whether a filter can be modified by a command with the letter `C`
+## Check that parameter can be updated by a command
+The [help for a filter (example)](#parmaters) indicated whether a filter can be modified by a command with the letter `C`
 
 ```
 ffmpeg --help filter=drawtext
 ```
 
-Here in the output of `ffmpeg --help filter=drawtext. We can see see that text can be updated from commands, but the `fontfile` and the `textfile` cannot.
+Here, in the output of `ffmpeg --help filter=drawtext. We can see see that its text can be updated from commands, but the `fontfile` and the `textfile` (if used) cannot.
 
 ```
 Filter drawtext
@@ -730,17 +733,19 @@ Many commands such as `sine` have parameters that cannot be updated even though 
 
 <a name="zmq"> </a>
 ## Update commands from the command line with zmq
-The [zmq (doc)](https://ffmpeg.org/ffmpeg-filters.html#zmq_002c-azmq) filter allows one to read commands to control filters from and external source. `zmq` is a protocol popular protocol used for light weight messages buses. There is command line tooling for zmq.
+The [zmq filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#zmq_002c-azmq) allows one to read commands to control filters from an external source. `zmq` is a popular protocol used for light-weight messages buses. There is command-line tooling for zmq.
 
 ```
-pip install zeroless-tools
+pipx install zeroless-tools
 ffplay -f lavfi -i  'color, zmq' &
 echo 'color color orange' | zeroclient 5555 req
 echo 'color color purple | zeroclient 5555 req
 kill %
 ```
 
-`zmq` supports different modes of sending - we seem to need use the request protocol., indicated by `req`
+This example installs tooling for use on the command-line using pipx. We the start playing a filter that outputs solid color ans uses zmq in the filter chain allowing this color to be modified. We send a message to the color filter that its color should be changed to orange, then purple. By default the zmq protocol listens on port 5555.
+
+`zmq` supports different modes of message passing - we seem to need to use the request protocol, indicated by `req` when we use zeroclient.
 
 ## Create a remote control for a video being played
 
@@ -750,7 +755,7 @@ ffplay -f lavfi -i 'sine=volume=sin(t)'
 
 <a name="features"> </a>
 # Index of language features
-At its core, ffmpeg applies filters of input and output in a pipeline of filters.
+At its core, FFmpeg applies filters of input and output in a pipeline of filters.
 There are more filters than this cookbook will cover, you can [list filters](#list) from the commad line.
 
 Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs. Filters take [parameters](#params) which are expressed in the form [`key=value`](#params) and [separated by colon (`:`) characters](#colons). Parameters have an order and you can [omit the paramater name](#omit-name) if parameters are given in this order. For some filters, for some parameters you can use [expressions](#expressions-topic) to calculate a value based on things like the width and height of the frame and the timestamp.
