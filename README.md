@@ -1,5 +1,5 @@
-# A beginner's FFmpeg cookbook
-*@readwithai - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/)*
+# A beginner's cookbook for FFmpeg
+**@readwithai** - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/)* - [FFmpeg tutoring](https://readwithai.substack.com/p/online-ffmpeg-tutoring)
 
 This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds up the reader's knowledge of FFmpeg's features through examples, before providing more applied examples which link back to early examples to aid understanding and adaptation. You may now  want to jump to the [introduction](#introduction).
 
@@ -14,7 +14,10 @@ If you think a particularly recipe belongs in this guide, feel free to [add it a
 
 <a name="alternatives"> </a>
 # Alternatives and prior work
-There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it starts at the beginning. haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook), as does  [Lorna Jane](https://lornajane.net/posts/2014/my-ffmpeg-cookbook) but these only a few examples. There is [quite complete reference documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
+There are a few other cookbooks. [ffmprovisr](https://amiaopensource.github.io/ffmprovisr/) is quite complete, but doesn't feel like it covers the initial parts of understanding FFmpeg.
+[ffmpeg by example](https://ffmpegbyexample.com/) is a website which focuses on examples, but does cover initial use.
+
+haileys has [the beginnings of a cookbook](https://github.com/haileys/ffmpeg-cookbook), as does  [Lorna Jane](https://lornajane.net/posts/2014/my-ffmpeg-cookbook) but these only a few examples. There is [quite complete reference documentation on filters](https://ffmpeg.org/ffmpeg-filters.html#Filtering-Introduction).
 
 There are [various books](https://trac.ffmpeg.org/wiki/BooksAndOtherExternalResources) on FFmpeg, including one which is [available for free](https://github.com/jdriselvato/FFmpeg-For-Beginners-Ebook) online
 
@@ -363,7 +366,7 @@ This example is similar to the [previous one](#command-example) but for an audio
 We create a square wave because these [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the [aevalsrc filter (example)](#aevalsrc) with [an expression](#expression) that allows one to specific a formula, that we send through a bandpass filter. This wave is then sent into asendcmd which has a command to change the frequency of the bandpass signal after two seconds.
 
 Unfortunately, FFmpeg requires you to use a different filter for sending commands to audio filters thsn video filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd).
- 
+
 > **See also**: [Audio engineering](#audio)
 <a name="devices"> </a>
 ## List available devices
@@ -629,7 +632,7 @@ The readability of code can be a bit of a trade off. What is easier to read for 
 
 <a name="hstack"> </a>
 ## Using source filters as input
-In some examples, we use complex filters with -`filter_complex` to support [source filters](source-filters). The output of source filters will often be [labelled](#labels). You may be able to simplify suchs filters by moving parts of the filter out of the main filter and into an input source of lavfi type. 
+In some examples, we use complex filters with -`filter_complex` to support [source filters](source-filters). The output of source filters will often be [labelled](#labels). You may be able to simplify suchs filters by moving parts of the filter out of the main filter and into an input source of lavfi type.
 
 Here is an example"
 
