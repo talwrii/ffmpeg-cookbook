@@ -459,7 +459,7 @@ ffmpeg -i red.mp4 -i blue.mp4 -filter_complex '[0][1]xstack=layout=0_0|w0_0:fill
 ```
 Here we create two vidoes [consisting of solid colour (example)](#solid-color) which are ten seconds long but with different sizes. The first is red and 200 pixels wide and 100 pixels wide. The second is blue and 300 pixels wide and 400 pixels high.
 
-We then combine these together with the [xstack (doc)](https://ffmpeg.org/ffmpeg-filters.html#xstack-1). `xstack` works by drawing videos into an imaginary canvas. The `layout` parameter specifies the top left coordinate of the recentangle for each source using the variables `w0`, `h0`, `w1`, `h1` ... etc for the width and heights of images. Somewhat confusingly the indexes start at 0 rather than 1 (this is referred to as [zero-based numbering](#zero-indexing)).
+We then combine these together with the [xstack (doc)](https://ffmpeg.org/ffmpeg-filters.html#xstack-1). `xstack` works by drawing videos into an imaginary canvas. The `layout` parameter specifies the top left coordinate of the recentangle for each source using the variables `w0`, `h0`, `w1`, `h1` ... etc for the width and heights of images. Somewhat confusingly the indexes start at 0 rather than 1 (this is referred to as [zero-based numbering](#zero-index)).
 
 So this example the first image is display at `(0, 0)` and the second image is placed to the right of the image but at the same height at `(first_source_width, 0)`.
 
@@ -811,17 +811,19 @@ FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html)
 
 > See [alternatives](#alternatives) for documentation similar to this.
 
-<a name="programming"> </a>
+<a name="zero-index"> </a>
+<a name="programming" ></a>
 # General programming and command-line knowledge
 FFmpeg is a command-line tool written for the kind of user that uses command-line tools. This has certain affordances and norms which ffmpeg will assume and use. Completely covering these concepts would distract from the article and take time. However, I can provide links to certain concepts that someone more interested in ffmpeg from an artistic or practical angle might have.
 
 Once you have derived some value from this guide, you might like to review all these concepts to speed up your understanding over others
 
-* [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (example)](expression-example) [(topic)](#expressions-topic).
-* FFmpeg provies a [Command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) this is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell) commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
+* [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (example)](#expression-example) [(topic)](#expressions-topic).
+* FFmpeg's [expression language (example)](#expression-example) makes use of [variables](https://en.wikipedia.org/wiki/Variable_\(computer_science\)) and [functions](https://en.wikipedia.org/wiki/Function_\(computer_programming\))
+* FFmpeg provies a [command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) which is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell), commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)).
 * [Linux](https://en.wikipedia.org/wiki/Linux) is an operting system that you can use on your system which is often easier to program for but may lack commercial support
 * [man](https://en.wikipedia.org/wiki/Man_page) is a command line tool available on many operating systems like linux and mac that can be used to quickly obtain documentation from the command-line
-* [zero-based based numbering](https://en.wikipedia.org/wiki/Zero-based_numbering). Some filters such as [xstack] start counting from 0 for some values.
+* [Zero-based based numbering](https://en.wikipedia.org/wiki/Zero-based_numbering). Some filters such as [xstack] start counting from 0 for some values.
 * [printf](https://en.wikipedia.org/wiki/Printf) is a way of formatting data into text used in C as well as other languages.
 
 <a name="av-concepts"> </a>
