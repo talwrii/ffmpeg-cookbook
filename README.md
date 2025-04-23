@@ -23,7 +23,7 @@ There are [various books](https://trac.ffmpeg.org/wiki/BooksAndOtherExternalReso
 
 The [FFmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering). You can also [ask questions on reddit](https://www.reddit.com/r/ffmpeg).
 
-What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking linking, tries to use an innovative approach to ordering of material. Focuses on exapmles that can be immediately run without material.
+What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking linking, tries to use an innovative approach to ordering of material. Focuses on examples that can be immediately run without material.
 
 <a name="introduction"> </a>
 # Introduction: The core of FFmpeg
@@ -43,7 +43,7 @@ You can play the silence you have created with `ffplay silence.wav`.
 
 This uses the [source filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#toc-Filtering-Introduction), [anullsrc (doc)](https://ffmpeg.org/ffmpeg-filters.html#anullsrc) which generates ten seconds of silence (specified through the `duration` parameter) and then writes this to a stream labelled '[out]'. The `-map` command specifies stream labelled `[out]` is used in the output.
 
-You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 silence.wav` and an the output of the filter is ipplicitly used as the stream for output. But you cannot use `-af` because these filters must have precisely one input and one output and this has no input.
+You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 silence.wav` and an the output of the filter is implicitly used as the stream for output. But you cannot use `-af` because these filters must have precisely one input and one output and this has no input.
 
 <a name="play"> </a>
 <a name="sine-play"> </a>
@@ -59,7 +59,7 @@ ffplay -f lavfi 'sine=frequency=256:duration=10'
 
 This command specifies that the format of the input is a `libavformat` filter ("LibAVFIlter"). `ffplay` does not have a `-filter_complex` argument but you can use this instead for complex filters. `-f lavfi` can also be used with `ffmpeg` - but you must use `-i` to specify the input.
 
-The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-filters.html#sine), are specified by `=` and separted by `:`.
+The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-filters.html#sine), are specified by `=` and separated by `:`.
 
 You do not need to use ffplay to play instead you can [use the xv output](#xv)  which can be useful if you have multiple filters.
 
@@ -91,7 +91,7 @@ This creates two streams, `[one]` and `[two]` using the [sine filter (example)](
 ffmpeg -filters
 ```
 
-This command lists all available filters together with some information about each filtet. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
+This command lists all available filters together with some information about each filter. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
 
 Filters are listed in the filters [manual page](#man-pages): `man ffmpeg-filters`.
 
@@ -118,7 +118,7 @@ ffmpeg -i sine.wav -af 'volume=volume=0.5' quiet-sine.wav
 ffplay quiet-sine.wav
 ```
 
-This creates a file containing a sine wav and then use the `volume` filter to decrease the volume to 50% of the original volumen. Because we are using a filter that has precisely one input and output, we can use `-af` rather than `-filter_complex`, but `-filter_complex` would still work.
+This creates a file containing a sine wav and then use the `volume` filter to decrease the volume to 50% of the original volume. Because we are using a filter that has precisely one input and output, we can use `-af` rather than `-filter_complex`, but `-filter_complex` would still work.
 
 <a name="two-streams"> </a>
 <a name="concat"> </a>
@@ -131,7 +131,7 @@ ffmpeg -i sine1.wav -i sine2.wav -filter_complex '[0][1]concat=v=0:a=1'  -ac 1  
 ffplay concat.wav
 ```
 
-We [create two sine waves](#write-sine) like in the prevoius recipes. We then combine together the first (`[0]`) and second (`[1]`) inputs with the `concat` filter. We must specify that concat outputs no video streams and one audio stream because these are not the defaults: concat works with one video stream by default.
+We [create two sine waves](#write-sine) like in the previous recipes. We then combine together the first (`[0]`) and second (`[1]`) inputs with the `concat` filter. We must specify that concat outputs no video streams and one audio stream because these are not the defaults: concat works with one video stream by default.
 
 
 Here is the documentation for `concat`:
@@ -183,7 +183,7 @@ Here we specify that we are reading one frame with `-frames:v 1`.
 ffmpeg -filter_complex 'color=color=red:duration=10s' red.mp4
 ```
 
-We use the [color filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) togethet with the duration parameter of ten seconds and the color parameter of red.
+We use the [color filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#allrgb_002c-allyuv_002c-color_002c-colorchart_002c-colorspectrum_002c-haldclutsrc_002c-nullsrc_002c-pal75bars_002c-pal100bars_002c-rgbtestsrc_002c-smptebars_002c-smptehdbars_002c-testsrc_002c-testsrc2_002c-yuvtestsrc) together with the duration parameter of ten seconds and the color parameter of red.
 
 We use `-filter_complex` because there is no input file since `color` is a source filter. We specify the output files as `red.mp4`.
 
@@ -194,7 +194,7 @@ We use `-filter_complex` because there is no input file since `color` is a sourc
 ffplay -f lavfi 'color=color=red:duration=5s [red]; color=color=blue:duration=5s [blue]; [red][blue]xfade=duration=5s'
 ```
 
-We create two streams, one consisting of solid red, the other of solid blue. We then feed both these staerms into the `xfade` filter which "cross-fades" between the two over 5 seconds.
+We create two streams, one consisting of solid red, the other of solid blue. We then feed both these streams into the `xfade` filter which "cross-fades" between the two over 5 seconds.
 
 > **See also**: [ffplay vs ffmpeg](#play)
 
@@ -219,7 +219,7 @@ See the [section on positioning text](#positioning)
 ffplay -f lavfi -i 'color=color=white, drawtext=text=hello:x=(main_w - text_w) / 2:y=(main_h-text_h) /2'
 ```
 
-We [render text using the drawtext filter](#text) as we did in this previous recipe. But we also use the `x` and `y` paramaters that accept [drawtext's own expression language(doc)](https://ffmpeg.org/ffmpeg-filters.html#Syntax).
+We [render text using the drawtext filter](#text) as we did in this previous recipe. But we also use the `x` and `y` parameters that accept [drawtext's own expression language(doc)](https://ffmpeg.org/ffmpeg-filters.html#Syntax).
 
 Note that we the division operation, `/`, in the expression. `main_w` represents the video width, `main_h` its height, `text_w` the rendered text's width and `text_h` its height.
 
@@ -230,12 +230,12 @@ In the `x` parameter for `drawtext`, [expressions](#expressions-topic) are evalu
 
 <a name="capture-screen"> </a>
 <a name="x11grab"> </a>
-## Capture the screen using linux
+## Capture the screen using Linux
 ```bash
 ffplay  -f x11grab  -i ''
 ```
 
-This exapmle works on [linux](#programming) but there are [analogs for other operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop)
+This example works on [Linux](#programming) but there are [analogs for other operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop)
 
 This [section of the wiki of the ffmpeg wiki](https://trac.ffmpeg.org/wiki/Capture/Desktop) describes how to capture on different systems. You can also [capture a specific window](#capture-window), or a [specific region](#capture-region).
 
@@ -322,7 +322,7 @@ We [create an image (example)](#image) consisting of the letter L, [scaled (exam
 
 We then input both these files into FFmpeg. We must use `-filter_complex` because we have two inputs.
 
-We place the logo over the image using the overlay filter by specifing the `x` and `y` parameter. These are [expressions](#expressions) using the variables `W`, `w`, `H` and `h` for the weights and heights of the first and second images.
+We place the logo over the image using the overlay filter by specifying the `x` and `y` parameter. These are [expressions](#expressions) using the variables `W`, `w`, `H` and `h` for the weights and heights of the first and second images.
 
 ## Add music to a video
 ```
@@ -404,7 +404,7 @@ Here are some topics covered
 * [Interesting outputs from FFmpeg](#text)
 * [Controlling FFmpeg externally](#external)
 
-We also cover some more topics of ther internals of ffmpeg - while linking to examples.
+We also cover some more topics of Thor internals of ffmpeg - while linking to examples.
 
 * [Using commands](#commands)
 * [Writing more readable filters](#readability)
@@ -418,13 +418,13 @@ We also cover some more topics of ther internals of ffmpeg - while linking to ex
 # Recording your computer
 <a name="capture-window"> </a>
 <a name="capture-specific"> </a>
-##  Record a specific window using linux
+##  Record a specific window using Linux
 ```bash
 xwininfo
 ffplay -window_id 0x520003e -f x11grab -i ''
 ```
 
-This example works on [linux](#programming), but there are [similar filters for different operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop).
+This example works on [Linux](#programming), but there are [similar filters for different operating systems](https://trac.ffmpeg.org/wiki/Capture/Desktop).
 
 This uses the `-window_id` option which is an option for the x11grab [device](#devices) to record a specific window [on your screen](#capture-screen).
 
@@ -457,9 +457,9 @@ ffmpeg -filter_complex 'color=red:size=200x100, trim=duration=10s' red.mp4
 ffmpeg -filter_complex 'color=blue:size=300x400, trim=duration=10s' blue.mp4
 ffmpeg -i red.mp4 -i blue.mp4 -filter_complex '[0][1]xstack=layout=0_0|w0_0:fill=black' combined.mp4
 ```
-Here we create two vidoes [consisting of solid colour (example)](#solid-color) which are ten seconds long but with different sizes. The first is red and 200 pixels wide and 100 pixels wide. The second is blue and 300 pixels wide and 400 pixels high.
+Here we create two videos [consisting of solid colour (example)](#solid-color) which are ten seconds long but with different sizes. The first is red and 200 pixels wide and 100 pixels wide. The second is blue and 300 pixels wide and 400 pixels high.
 
-We then combine these together with the [xstack (doc)](https://ffmpeg.org/ffmpeg-filters.html#xstack-1). `xstack` works by drawing videos into an imaginary canvas. The `layout` parameter specifies the top left coordinate of the recentangle for each source using the variables `w0`, `h0`, `w1`, `h1` ... etc for the width and heights of images. Somewhat confusingly the indexes start at 0 rather than 1 (this is referred to as [zero-based numbering](#zero-index)).
+We then combine these together with the [xstack (doc)](https://ffmpeg.org/ffmpeg-filters.html#xstack-1). `xstack` works by drawing videos into an imaginary canvas. The `layout` parameter specifies the top left coordinate of the rectangle for each source using the variables `w0`, `h0`, `w1`, `h1` ... etc for the width and heights of images. Somewhat confusingly the indexes start at 0 rather than 1 (this is referred to as [zero-based numbering](#zero-index)).
 
 So this example the first image is display at `(0, 0)` and the second image is placed to the right of the image but at the same height at `(first_source_width, 0)`.
 
@@ -508,7 +508,7 @@ Here we use an expression in `fontsize` using the `main_h` variable so the font 
 ffplay -f lavfi 'color=white, drawtext=text=hello:fontfile=\\:style=Bold:fontsize=h'
 ```
 
-This query uses a fontconfig generic query string `:style=Bold` in the `fontflie` field. We need to escape the colon with two backslases. We use the draw text filter (example) as before
+This query uses a fontconfig generic query string `:style=Bold` in the `fontfile` field. We need to escape the colon with two backslashes. We use the draw text filter (example) as before
 
 
 ## Italic text
@@ -528,9 +528,9 @@ Again we [use a fontconfig query (example)](#bold). This time we search for the 
 # Working with images
 FFmpeg provides filters to operate on video streams and audio streams and to combine these streams together into files. However, because an image is a video containing one frame FFmpeg can also operate on images.
 
-Some of the image based functionality which FFmpeg provides is analogous to the [Imagemagick](https://imagemagick.org/script/command-line-processing.php). Imagemagick only operates on images, so if you learn FFmpeg then what you have learned will also apply to videos. However, imagemagic has more features. Animated GIFs and webm images are examples of some "video functionalityt" that imagemagick provides.
+Some of the image based functionality which FFmpeg provides is analogous to the [Imagemagick](https://imagemagick.org/script/command-line-processing.php). Imagemagick only operates on images, so if you learn FFmpeg then what you have learned will also apply to videos. However, imagemagick has more features. Animated GIFs and webm images are examples of some "video functionality" that imagemagick provides.
 
-In general, if you want to output an image you can [use the `-frames:v 1` option (exampel)](#frames) to extract and image.
+In general, if you want to output an image you can [use the `-frames:v 1` option (example)](#frames) to extract and image.
 
 <a name="ts-frame"> </a>
 ## Extract a frame from a video
@@ -547,7 +547,7 @@ First we [generate a video that counts up (example)](#count) to sample from. The
 <a name="aevalsrc-sine"> </a>
 <a name="variables-2"> </a>
 # Audio engineering
-FFmpeg is not explicitly designed for audio engineering and there a number of tools better suited for serious engineering. However, `ffmpeg` is performant, convenient for editting videos that need a little engineering and these examples are fun, interactive, and can demostrate features
+FFmpeg is not explicitly designed for audio engineering and there a number of tools better suited for serious engineering. However, `ffmpeg` is performant, convenient for editing videos that need a little engineering and these examples are fun, interactive, and can demonstrate features
 ## Generating a sine wave using aevalsrc
 [aevalsrc (doc)](https://ffmpeg.org/ffmpeg-filters.html#aevalsrc) allows you to use a function to express a sound. Here we reimplement the [sine wave recipe](#sine) using this.
 
@@ -585,11 +585,11 @@ ffmpeg -filter_complex 'color=red[red]; color=blue[blue]; [red][blue]xfade=durat
 ffmpeg -re  -i spectrum.mp4  -vf 'format=yuv420p' -f xv title
 ```
 
-`-re` tells `ffmpeg` to read the file at normal speed (otherwise ffmpeg would read as fast as possible). `format=yuv420p` converts to a format that `xv` accepts. `-re` does not work when you use [source filters (example)](#source) for these you have to use the [realtime filter(example)](#realtime)
+`-re` tells `ffmpeg` to read the file at normal speed (otherwise ffmpeg would read as fast as possible). `format=yuv420p` converts to a format that `xv` accepts. `-re` does not work when you use [source filters (example)](#source) for these you have to use the [real-time filter(example)](#realtime)
 
 <a name="realtime"> </a>
 ## Limit the speed when using xv with filters
-The `xv` video allows ffmpeg to create real time video output. If you do not use the [`-re` filter (example)](#xv) or use [source filters (example)](#video-source-filters) then by default ffmpeg will run as fast as possible - even when writing to `xv`. You will not be able to watch the output and this will use 100% of the cpu. You can fix this use the [realtime (doc)](https://ffmpeg.org/ffmpeg-filters.html#realtime_002c-arealtime) filter.
+The `xv` video allows ffmpeg to create real time video output. If you do not use the [`-re` filter (example)](#xv) or use [source filters (example)](#video-source-filters) then by default ffmpeg will run as fast as possible - even when writing to `xv`. You will not be able to watch the output and this will use 100% of the CPU. You can fix this use the [realtime (doc)](https://ffmpeg.org/ffmpeg-filters.html#realtime_002c-arealtime) filter.
 
 ```
 ffmpeg -filter_complex 'color=white, drawtext=text=%{pts}:fontsize=h, realtime' -f xv ''
@@ -606,7 +606,7 @@ The first example creates a stream counting up using [drawtext (example)](#drawt
 <a name="external"> </a>
 
 ## Playing videos on the terminal with kitty
-There [terminal emulator kitty](https://github.com/kovidgoyal/kitty) extended the the protocol that terminals used that it can render pixels. Some other terminal emulators have adopted this standard. You can use this to display the output from ffmpeg - including videos - diretly in the terminal.
+There [terminal emulator kitty](https://github.com/kovidgoyal/kitty) extended the the protocol that terminals used that it can render pixels. Some other terminal emulators have adopted this standard. You can use this to display the output from ffmpeg - including videos - directly in the terminal.
 
 This can be used to display images directly in the terminal. This is partly a cool trick - but it can have some benefits in terms of productivity and avoiding "paper cuts" while working because you does not have to move windows around. For many use cases one might prefer to use streaming to send output to a consistent window.
 
@@ -621,7 +621,7 @@ ffmpeg -loglevel 16 -filter_complex 'color=blue, drawtext=text=hi:x=w/3 + w/3*si
 
 First we install `timg` for play videos in a terminal and `kitty` for a terminal that supports images. We then creating an interesting video using ffmpeg to [render some text (example)](#text) which is animated using an [expression in time (example)](#time-expression) to [change the position of our text (example)](#positioning).
 
-The output is written to [standard output](#programming), as specified by  `-`,  and then read from standard in by `timg`. Because there is no file name we must specify the format of the output stream using `-f`.  We use `-loglevel 16` to hide logging about FFmpegs normal operation which would otherwise get in the way of the video playing in your terminal.
+The output is written to [standard output](#programming), as specified by  `-`,  and then read from standard in by `timg`. Because there is no file name we must specify the format of the output stream using `-f`.  We use `-loglevel 16` to hide logging about FFmpeg's normal operation which would otherwise get in the way of the video playing in your terminal.
 
 ## Controlling FFmpeg externally
 If you are using realtime outputs such as [X11 video output](#xv) or streaming it may make sense to control FF mpeg externally. You can do this using [commands (example)](#command-example) which can be [controlled from the command line or programs via zmq](#zmq).
@@ -632,7 +632,7 @@ The readability of code can be a bit of a trade off. What is easier to read for 
 
 <a name="hstack"> </a>
 ## Using source filters as input
-In some examples, we use complex filters with -`filter_complex` to support [source filters (example)](#source-filters). The output of source filters will often be [labelled (example)](#labels). You may be able to simplify suchs filters by moving parts of the filter out of the main filter and into an input source [of type lavfi (example)](#lavfi).
+In some examples, we use complex filters with -`filter_complex` to support [source filters (example)](#source-filters). The output of source filters will often be [labelled (example)](#labels). You may be able to simplify such filters by moving parts of the filter out of the main filter and into an input source [of type lavfi (example)](#lavfi).
 
 Here is an example:
 
@@ -642,7 +642,7 @@ ffmpeg -f lavfi -i 'color=red' -f lavfi -i 'color=green' -f lavfi -i 'color=blue
 
 This command uses [`-f lavfi` (example)](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video. The argument of `-filter_complex` is definitely shorter as a result.
 
-## Creating a filtergraph in a file
+## Creating a filter graph in a file
 With `-filter_complex_script`, you can read a filter specification ("filter graph") from a file. Sometimes command can be more readable it details are separated out into a file.
 
 ```bash
@@ -661,7 +661,7 @@ ffmpeg --help filter=color
 ffplay -f lavfi -i 'color=white:100x100'
 ```
 
-We output a video with solid colour witj a colour of `white` and `size` of `100x100`. We can omit both parameter names since the first parameter is `color` and the second is `size`.
+We output a video with solid colour with a colour of `white` and `size` of `100x100`. We can omit both parameter names since the first parameter is `color` and the second is `size`.
 
 Here is some of the output from `ffmpeg --help filter=color`. Notice the order of parameters and the fact that some parameters have aliases which do not form part of the parameter order.
 
@@ -680,7 +680,7 @@ color AVOptions:
 ```
 <a name="reflection"> </a>
 # Getting information about FFmpeg
-FFmpeg has various functions to provide documentation and information about how to run FFmpeg by calling FFFmpeg itself.
+FFmpeg has various functions to provide documentation and information about how to run FFmpeg by calling FFmpeg itself.
 ## Listing objects
 FFmpeg has various types of objects that form part of commands. These objects can be listed like so:
 
@@ -711,7 +711,7 @@ See [`man ffmpeg`](#man-pages) for details.
 > **See also**: [Expressions](#expressions-topic)
 
 ## Check that parameter can be updated by a command
-The [help for a filter (example)](#parmaters) indicates whether a filter can be modified by a command with the letter `T`
+The [help for a filter (example)](#parameters) indicates whether a filter can be modified by a command with the letter `T`
 
 ```
 ffmpeg --help filter=drawtext
@@ -721,7 +721,7 @@ Here, in the output of `ffmpeg --help filter=drawtext`. We can see see that its 
 
 ```
 Filter drawtext
-  Draw text on top of video frames using libfreetype library.
+  Draw text on top of video frames using [D[C`libfreetype` library.
     Inputs:
        #0: default (video)
     Outputs:
@@ -758,10 +758,10 @@ ffplay -f lavfi -i 'sine=volume=sin(t)'
 
 <a name="features"> </a>
 # Index of language features
-At its core, FFmpeg applies filters of input and output in a pipeline of filters.
-There are more filters than this cookbook will cover, you can [list filters](#list) from the commad line.
+At its core, FFmpeg applies filters on input, feeds the result into other filters, and then produces output.
+There are more filters available than this cookbook could cover. You can [list filters](#list) from the command line.
 
-Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs. Filters take [parameters](#params) which are expressed in the form [`key=value`](#params) and [separated by colon (`:`) characters](#colons). Parameters have an order and you can [omit the paramater name](#omit-name) if parameters are given in this order. For some filters, for some parameters you can use [expressions](#expressions-topic) to calculate a value based on things like the width and height of the frame and the timestamp.
+Filters take a number of inputs and outputs. [Source filters](#source) have no inputs or outputs. Filters take [parameters](#params) which are expressed in the form [`key=value`](#params) and [separated by colon (`:`) characters](#colons). Parameters have an order and you can [omit the parameter name](#omit-name) if parameters are given in this order. For some filters, for some parameters you can use [expressions](#expressions-topic) to calculate a value based on things like the width and height of the frame and the timestamp.
 
 You can connect up filters that take one input stream and have one output stream [using ,](#comma). Alternatively you can create a named stream and write to it by putting this is [square brackets after an expression](#output-filter).
 
@@ -821,9 +821,9 @@ Once you have derived some value from this guide, you might like to review all t
 
 * [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (example)](#expression-example) [(topic)](#expressions-topic).
 * FFmpeg's [expression language (example)](#expression-example) makes use of [variables](https://en.wikipedia.org/wiki/Variable_\(computer_science\)) and [functions](https://en.wikipedia.org/wiki/Function_\(computer_programming\))
-* FFmpeg provies a [command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) which is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell), commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)).
-* [Linux](https://en.wikipedia.org/wiki/Linux) is an operting system that you can use on your system which is often easier to program for but may lack commercial support
-* [man](https://en.wikipedia.org/wiki/Man_page) is a command line tool available on many operating systems like linux and mac that can be used to quickly obtain documentation from the command-line
+* FFmpeg provides a [command-line interface](https://en.wikipedia.org/wiki/Command-line_interface) which is often run from a [shell](https://en.wikipedia.org/wiki/Unix_shell), commonly [bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)).
+* [Linux](https://en.wikipedia.org/wiki/Linux) is an operating system that you can use on your system which is often easier to program for but may lack commercial support
+* [man](https://en.wikipedia.org/wiki/Man_page) is a command line tool available on many operating systems like Linux and Mac that can be used to quickly obtain documentation from the command-line
 * [Zero-based based numbering](https://en.wikipedia.org/wiki/Zero-based_numbering). Some filters such as [xstack] start counting from 0 for some values.
 * [printf](https://en.wikipedia.org/wiki/Printf) is a way of formatting data into text used in C as well as other languages.
 
@@ -836,7 +836,7 @@ This guide assumes understanding of certain concepts related to images and video
 * [Coordinate](https://en.wikipedia.org/wiki/Coordinate_system) pixels in an image can be labelled with horizontal distance from the left edge and the vertical image from the top of the image.
 
 # Support
-If you found this guide helpful you can incentivise me to work it and similar things by [donating to my ko-fi](https://ko-fi.com/c/91cb0010ae).
+If you found this guide helpful you can incentivize me to work it and similar things by [donating to my ko-fi](https://ko-fi.com/c/91cb0010ae).
 
 You could also [book an online tutorial on this material](https://ko-fi.com/c/6ee072d36c).
 
@@ -845,12 +845,12 @@ Alternatively, simply reading [other documentation I have written](https://readw
 # About me
 I am **@readwithai**. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
 
-I am intersted in `FFmpeg` because I am [a fan of the command-line](https://readwithai.substack.com/p/my-productivity-tools) and occassionally do image editing and video-editing.
+I am interested in `FFmpeg` because I am [a fan of the command-line](https://readwithai.substack.com/p/my-productivity-tools) and occasionally do image editing and video-editing.
 
 If you liked this this guide you might like to:
 
 1. Have a look at some of [my productivity and command line tools](https://readwithai.substack.com/p/my-productivity-tools);
 2. Read [my review of note taking in Obsidian](https://readwithai.substack.com/p/note-taking-with-obsidian-much-of); or
-3. Check out my [cookbook for the Obsidian notetaking tool](https://open.substack.com/pub/readwithai/p/obsidian-plugin-repl-cookbook) and my open source Emacs inspired automation plugin [Plugin REPL](https://github.com/talwrii/plugin-repl).
+3. Check out my [cookbook for the Obsidian note taking tool](https://open.substack.com/pub/readwithai/p/obsidian-plugin-repl-cookbook) and my open source Emacs inspired automation plugin [Plugin REPL](https://github.com/talwrii/plugin-repl).
 
 You can follow me on [X](https://x.com/readwithai) where I write about productivity tools like this besides other things, or my [blog](https://readwithai.substack.com/) where I write more about reading,  research, note taking and Obsidian.
