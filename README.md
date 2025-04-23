@@ -363,11 +363,12 @@ ffplay -f lavfi -i  "aevalsrc=exprs=0.2 * gte(sin(128 * t * 2 * PI)\,0), bandpas
 
 This example is similar to the [previous one](#command-example) but for an audio filter rather than a video filter.
 
-We create a square wave because these [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the [aevalsrc filter (example)](#aevalsrc) with [an expression](#expression) that allows one to specific a formula, that we send through a bandpass filter. This wave is then sent into asendcmd which has a command to change the frequency of the bandpass signal after two seconds.
+We create a square wave because these [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the [aevalsrc filter (example)](#aevalsrc) with [an expression](#expression) that allows one to specific a formula, that we send through a bandpass filter. This waveform is then sent into [asendcmd (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) which has a command to change the frequency of the bandpass signal after two seconds.
 
-Unfortunately, FFmpeg requires you to use a different filter for sending commands to audio filters thsn video filters, [asendcmd(doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd).
+Unfortunately, FFmpeg requires you to use a different filter for sending commands to audio filters thsn video filters, so we use [asendcmd (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) rather than [sendcmd (example)](#command-example).
 
 > **See also**: [Audio engineering](#audio)
+
 <a name="devices"> </a>
 ## List available devices
 ```bash
@@ -376,10 +377,9 @@ ffmpeg -devices
 
 `D` means an input device. (demuxer). `E` means an output device (muxer).
 
-You can see more information about defines with [`man ffmpeg-devices`](#man-pages).
+You can see more information about devices with [`man ffmpeg-devices`](#man-pages).
 
 > **See also**: [xv device for video output](#xv), [x11grab device for video input](#x11grab)
-
 
 
 ## Create a grid of 16 frames taken from the video
