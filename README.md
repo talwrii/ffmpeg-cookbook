@@ -632,18 +632,18 @@ The readability of code can be a bit of a trade off. What is easier to read for 
 
 <a name="hstack"> </a>
 ## Using source filters as input
-In some examples, we use complex filters with -`filter_complex` to support [source filters](source-filters). The output of source filters will often be [labelled](#labels). You may be able to simplify suchs filters by moving parts of the filter out of the main filter and into an input source of lavfi type.
+In some examples, we use complex filters with -`filter_complex` to support [source filters (example)](#source-filters). The output of source filters will often be [labelled (example)](#labels). You may be able to simplify suchs filters by moving parts of the filter out of the main filter and into an input source [of type lavfi (example)](#lavfi).
 
-Here is an example"
+Here is an example:
 
 ```bash
 ffmpeg -f lavfi -i 'color=red' -f lavfi -i 'color=green' -f lavfi -i 'color=blue' -filter_complex '[0][1][2]hstack=inputs=3, trim=duration=5s' stacked.mp4
 ```
 
-This command uses [`-f lavfi`](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video.
+This command uses [`-f lavfi` (example)](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video. The argument of `-filter_complex` is definitely shorter as a result.
 
 ## Creating a filtergraph in a file
-With `-filter_complex_script`, you can read a filter specification ("filter graph") from a file.
+With `-filter_complex_script`, you can read a filter specification ("filter graph") from a file. Sometimes command can be more readable it details are separated out into a file.
 
 ```bash
 echo "color=red:duration=5s" > filter.lavfi
@@ -680,6 +680,7 @@ color AVOptions:
 ```
 <a name="reflection"> </a>
 # Getting information about FFmpeg
+FFmpeg has various functions to provide documentation and information about how to run FFmpeg by calling FFFmpeg itself.
 ## Listing objects
 FFmpeg has various types of objects that form part of commands. These objects can be listed like so:
 
