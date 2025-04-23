@@ -792,19 +792,19 @@ It may be useful to understand some [programming concepts](#programming) to use 
 ## Manual pages
 Manual pages run through the command `man` from the [command-line](#programming) are a commonly used way to provided easy to access documentation from the command-line.
 
-FFmpeg provides various manual pages. You can show these with the command `apropos ffmpeg`. There is online documentation that corresponds to each man page.
+FFmpeg provides various manual pages. You can show these with the command `apropos ffmpeg`. There is online documentation that corresponds to each man page which we link to here:
 
-* [ffmpeg](https://ffmpeg.org/ffmpeg.html)
-* [ffmpeg-all](https://ffmpeg.org/ffmpeg-all.html)
-* [ffmpeg-bitstream-filters](https://ffmpeg.org/ffmpeg-bitstream-filters.html)
-* [ffmpeg-codecs](https://ffmpeg.org/ffmpeg-doecs.html)
-* [ffmpeg-devices](https://ffmpeg.org/ffmpeg-devices.html)
-* [ffmpeg-filters](https://ffmpeg.org/ffmpeg-filters.html)
-* [ffmpeg-formats](https://ffmpeg.org/ffmpeg-formats.html)
-* [ffmpeg-protocols](https://ffmpeg.org/ffmpeg-protocols.html)
-* [ffmpeg-resampler](https://ffmpeg.org/ffmpeg-resampler.html)
-* [ffmpeg-scaler](https://ffmpeg.org/ffmpeg-scaler.html)
-* [ffmpeg-utils](https://ffmpeg.org/ffmpeg-utils.html)
+* [ffmpeg (doc)](https://ffmpeg.org/ffmpeg.html)
+* [ffmpeg-all (doc)](https://ffmpeg.org/ffmpeg-all.html)
+* [ffmpeg-bitstream-filters (doc)](https://ffmpeg.org/ffmpeg-bitstream-filters.html)
+* [ffmpeg-codecs (doc)](https://ffmpeg.org/ffmpeg-doecs.html)
+* [ffmpeg-devices (doc)](https://ffmpeg.org/ffmpeg-devices.html)
+* [ffmpeg-filters (doc)](https://ffmpeg.org/ffmpeg-filters.html)
+* [ffmpeg-formats (doc)](https://ffmpeg.org/ffmpeg-formats.html)
+* [ffmpeg-protocols (doc)](https://ffmpeg.org/ffmpeg-protocols.html)
+* [ffmpeg-resampler (doc)](https://ffmpeg.org/ffmpeg-resampler.html)
+* [ffmpeg-scaler (doc)](https://ffmpeg.org/ffmpeg-scaler.html)
+* [ffmpeg-utils (doc)](https://ffmpeg.org/ffmpeg-utils.html)
 
 ## Web pages
 FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html). See [alternatives](#alternatives) for documentation similar to this.
