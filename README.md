@@ -807,8 +807,9 @@ FFmpeg provides various manual pages. You can show these with the command `aprop
 * [ffmpeg-utils (doc)](https://ffmpeg.org/ffmpeg-utils.html)
 
 ## Web pages
-FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html). See [alternatives](#alternatives) for documentation similar to this.
+FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html).
 
+> See [alternatives](#alternatives) for documentation similar to this.
 
 <a name="programming"> </a>
 # General programming and command-line knowledge
@@ -831,8 +832,17 @@ This guide assumes understanding of certain concepts related to images and video
 * [Pixels](https://en.wikipedia.org/wiki/Pixel) an image consists of a grid of pixels each of which is a certain colour.
 * [Coordinate](https://en.wikipedia.org/wiki/Coordinate_system) pixels in an image can be labelled with horizontal distance from the left edge and the vertical image from the top of the image.
 
+# Support
+If you found this guide helpful you can incentivise me to work it and similar things by [donating to my ko-fi](https://ko-fi.com/c/91cb0010ae).
+
+You could also [book an online tutorial on this material](https://ko-fi.com/c/6ee072d36c).
+
+Alternatively, simply reading [other documentation I have written](https://readwithai.substack.com/p/my-command-line-documentation) supports my (varied) work.
+
 # About me
-I am @readwithai. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
+I am **@readwithai**. I make tools for research, reading and productivity - sometimes with [Obsidian](https://readwithai.substack.com/p/what-exactly-is-obsidian).
+
+I am intersted in `FFmpeg` because I am [a fan of the command-line](https://readwithai.substack.com/p/my-productivity-tools) and occassionally do image editing and video-editing.
 
 If you liked this this guide you might like to:
 
