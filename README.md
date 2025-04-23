@@ -774,17 +774,16 @@ You can [show help for a filter](#filter-help) and [list as filters](#list-filte
 
 <a name="expressions-topic"> </a>
 # Expressions
-Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext](#drawtext) has a different expression language using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
+Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext (examples) has a different expression language](#drawtext) using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
 
-You can see the documentation for the shared parts of the expression language (such as functions) with [`man ffmpeg`](#man-pages)
+You can see the documentation for the shared parts of the expression language (such as functions) with [`man ffmpeg-utils`](#man-pages)
 
-Expressions are useful for "continuous data", but can be rendered discrete using `if`. For discrete variables [commands](#commands-examples) can be more useful. Again filters choose whether a parameter can be updated from a command.
+Expressions are useful for "continuous data", but you can add discrete behaviour using the `if` function. For discrete behaviour, [commands](#commands-examples) can be more useful. Just as a filter decides for itself if an expression can be used for a parameter, it decides which of its parameters can be updated with commands..
 
-Examples of parameters supporting expressions: [drawtext=x](#drawtext), [aevalsrc=expr](#aevalsrc)
+Examples of parameters supporting expressions include [drawtext's x](#drawtext) and [aevalsrc's expr](#aevalsrc)
 
 
-It may be useful to understand some [programming concepts](#programming) to use expressions , such as escaping and variables.
-
+It may be useful to understand some [programming concepts](#programming) to use expressions , such as *escaping*, *variables* and *functions*.
 
 
 <a name="documentation"> </a>
