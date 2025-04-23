@@ -711,13 +711,13 @@ See [`man ffmpeg`](#man-pages) for details.
 > **See also**: [Expressions](#expressions-topic)
 
 ## Check that parameter can be updated by a command
-The [help for a filter (example)](#parmaters) indicated whether a filter can be modified by a command with the letter `C`
+The [help for a filter (example)](#parmaters) indicates whether a filter can be modified by a command with the letter `T`
 
 ```
 ffmpeg --help filter=drawtext
 ```
 
-Here, in the output of `ffmpeg --help filter=drawtext. We can see see that its text can be updated from commands, but the `fontfile` and the `textfile` (if used) cannot.
+Here, in the output of `ffmpeg --help filter=drawtext`. We can see see that its text can be updated by commands, but that `fontfile` and `textfile` (if used) cannot be.
 
 ```
 Filter drawtext
@@ -732,7 +732,7 @@ drawtext AVOptions:
    textfile          <string>     ..FV....... set text file
 ```
 
-Many commands such as `sine` have parameters that cannot be updated even though you might expect them to be updateable.
+Many commands such as `sine` have parameters that cannot be updated even though you might expect them to be mutable.
 
 <a name="zmq"> </a>
 ## Update commands from the command line with zmq
