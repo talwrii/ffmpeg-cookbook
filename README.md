@@ -1,4 +1,4 @@
-# A beginner's cookbook for FFmpeg
+# A beginner's Cookbook for FFmpeg
 **@readwithai** - [X](https://x.com/readwithai) - [blog](https://readwithai.substack.com/) - [FFmpeg tutoring](https://readwithai.substack.com/p/online-ffmpeg-tutoring)
 
 This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds up the reader's knowledge of FFmpeg's features through examples, before providing more applied examples which link back to early examples to aid understanding and adaptation. You may now  want to jump to the [introduction](#introduction).
