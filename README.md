@@ -63,7 +63,7 @@ The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-fi
 
 You do not need to use ffplay to play instead, you can [use the xv output device](#xv).  This can be useful if you have multiple input sources - which `ffplay` does not accept.
 
-> **See also**: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
+> **See also**: [create sine wave with aevalsrc](#aevalsrc-sine), [create arbitrary waveforms](#aevalsrc), [output to an GUI window](#xv)
 
 <a name="write_sine"></a>
 ## Write a sine wave to a file
@@ -71,7 +71,7 @@ You do not need to use ffplay to play instead, you can [use the xv output device
 ffmpeg -filter_complex 'sine=frequency=256:duration=10' sine.wav
 ffplay sine.wav
 ```
-Note how this compares to the previous example. This shows how you can convert between filters that play media and those that create a file containing the media.
+Note how this compares to [the previous example](#sine-play). This shows how you can convert between filters that play media and those that create a file containing the media.
 
 > **See also**: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc)
 
