@@ -57,11 +57,11 @@ You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 
 ffplay -f lavfi 'sine=frequency=256:duration=10'
 ```
 
-This command specifies that the format of the input is a `libavformat` filter ("LibAVFIlter"). `ffplay` does not have a `-filter_complex` argument but you can use this instead for complex filters. `-f lavfi` can also be used with `ffmpeg` - but you must use `-i` to specify the input.
+This command specifies that the format of the input is a `libavformat` filter ("LibAVFIlter"). `ffplay` does not have a `-filter_complex` argument but you can use this instead for complex filters. `-f lavfi` can also be used with wht `ffmpeg` - but you must use `-i` to specify the input filter.
 
-The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-filters.html#sine), are specified by `=` and separated by `:`.
+The parameters for the source filter, [`sine`(doc)](https://ffmpeg.org/ffmpeg-filters.html#sine), are initiated with an `=` and then separated by `:`.
 
-You do not need to use ffplay to play instead you can [use the xv output](#xv)  which can be useful if you have multiple filters.
+You do not need to use ffplay to play instead, you can [use the xv output device](#xv).  This can be useful if you have multiple input sources - which `ffplay` does not accept.
 
 > **See also**: [a sine wave with aevalsrc](#aevalsrc-sine), [an arbitrary waveform](#aevalsrc), [xv output](#xv)
 
