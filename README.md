@@ -3,7 +3,7 @@
 
 This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds up the reader's knowledge of FFmpeg's features through examples, before providing more applied examples which link back to early examples to aid understanding and adaptation. You may now  want to jump to the [introduction](#introduction).
 
-I created this guide because I found working out hoe FFmpeg worked from snippets too difficult and needed to form an understanding from first principles. FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features, these features become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
+I created this guide because I found working out how FFmpeg worked from snippets too difficult and needed to form an understanding from first principles. FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features, these features become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
 
 This guide provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html). I try to label links with `(example)` if they link to an earlier example of a feature or `(doc)` if they link to external documentation.
 
@@ -815,9 +815,9 @@ FFmpeg provides [reference documentation online](https://ffmpeg.org/ffmpeg.html)
 <a name="zero-index"> </a>
 <a name="programming" ></a>
 # General programming and command-line knowledge
-FFmpeg is a command-line tool written for the kind of user that uses command-line tools. This has certain affordances and norms which ffmpeg will assume and use. Completely covering these concepts would distract from the article and take time. However, I can provide links to certain concepts that someone more interested in ffmpeg from an artistic or practical angle might have.
+FFmpeg is a command-line tool written for the kind of user that uses command-line tools. This has certain affordances and norms which FFmpeg will assume and make use. Completely covering concepts related to general computer use would distract from the article and take time. However, I can provide links to certain that someone more interested in FFmpeg from an artistic or practical angle might not know.
 
-Once you have derived some value from this guide, you might like to review all these concepts to speed up your understanding over others
+Once you have derived some value from this guide, you might like to review all these concepts to speed up your understanding of the rest of the material.
 
 * [Escaping](https://en.wikipedia.org/wiki/Escape_character). Used in [audio filters](#audio-filters) and as part of the [expression language (example)](#expression-example) [(topic)](#expressions-topic).
 * FFmpeg's [expression language (example)](#expression-example) makes use of [variables](https://en.wikipedia.org/wiki/Variable_\(computer_science\)) and [functions](https://en.wikipedia.org/wiki/Function_\(computer_programming\))
