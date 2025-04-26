@@ -52,6 +52,7 @@ You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 
 <a name="colons"> </a>
 <a name="parameter-example"> </a>
 <a name="ffplay"> </a>
+<a name="audio-source"> </a>
 ## Play a sine wav at 256 hertz for ten seconds
 ```bash
 ffplay -f lavfi 'sine=frequency=256:duration=10'
@@ -91,11 +92,11 @@ This creates two streams, `[one]` and `[two]` using the [sine filter (example)](
 ffmpeg -filters
 ```
 
-This command lists all available filters together with some information about each filter. The output indicates what type of filter a filter is. For examples `|->A` means a filter is an audio source, `A->A` means that the filter takes audio as input and writes it to output etc.
+This command lists all available [filters (example)](#filters-example) together with some information about each filter. The output provides various information about the filter,  `|->A` means a filter is an audio source, `A->A` means that the filter takes an audio stream as [input (example)](#audio-filter) and produces one as [output (example)](#audio-source). Similarly, `V` indicates [video input](#video-filter) or [video output (example)](#video-source).
 
 Filters are listed in the filters [manual page](#man-pages): `man ffmpeg-filters`.
 
-> **See also:**: [About filters](#filters-abstract)
+> **See also:** [About filters](#filters-abstract), [Show a filter's parameters](#parameters)
 
 <a name="parameters"> </a>
 <a name="item-help"> </a>
@@ -115,6 +116,7 @@ Unfortunately, some information about [filters (example)](#output-filter) such a
 
 > **See also**: [An example of using parameters (example)](#parameters-example), [Expressions (example)](#expression-example), [FFmpeg documentation](#documentation)
 
+<a name="audio-filter"> </a>
 ## Decrease the volume of an audio file
 ```bash
 ffmpeg -filter_complex `sine=frequency=512:duration=10` sine.wav
@@ -182,6 +184,7 @@ Here we specify that we are reading one frame with `-frames:v 1`.
 
 > **See also**: [Working with images](#images), [Extract a frame](#ts-frame)
 
+<a name="video-source"> </a>
 ## Write ten seconds of red to a file
 ```bash
 ffmpeg -filter_complex 'color=color=red:duration=10s' red.mp4
