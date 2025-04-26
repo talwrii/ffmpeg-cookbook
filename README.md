@@ -96,7 +96,7 @@ This command lists all available [filters (example)](#filters-example) together 
 
 Filters are listed in the filters [manual page](#man-pages): `man ffmpeg-filters`.
 
-> **See also:** [About filters](#filters-abstract), [Show a filter's parameters](#parameters)
+> **See also:** [About filters](#filters-abstract), [Show a filter's parameters (example)](#parameters)
 
 <a name="parameters"> </a>
 <a name="item-help"> </a>
