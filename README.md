@@ -105,11 +105,15 @@ Filters are listed in the filters [manual page](#man-pages): `man ffmpeg-filters
 ffmpeg --help filter=color
 ```
 
+This command displays information about the [color (example)](#solid-color) such as which parameters can be used, their default values, [their order](#omit-names) and [what values can be given (example)](#expressions-example).
+
+In the output, some parameters are marked with a `T`, which indicates that they can be [modified through commands (example)](#commands-example).
+
 You can also get help for other objects such as a `decoder`, `encoder`, `demuxer`, `muxer`, `bsf` (bit stream filter), or `protocol`. See the [`man ffmpeg`](#man-pages) for details.
 
-Some filters are marked with a `T`, which indicates that they can be [modified through commands (example)](#commands-example).
+Unfortunately, some information about [filters (example)](#output-filter) such as which parameters can use [expressions (example)](#expression-example) and the variables which can be used in the expressions is not shown in this documentation, but must be found in [reference documentation](#documentation).
 
-Unfortunately, some information about filters such as which which properties can be evaluated with expressions and the expressions that can be used is not shown in this help but must be found in [reference documentation](#documentation).
+> **See also**: [An example of using parameters (example)](#parameters-example), [Expressions (example)](#expression-example), [FFmpeg documentation](#documentation)
 
 ## Decrease the volume of an audio file
 ```bash
