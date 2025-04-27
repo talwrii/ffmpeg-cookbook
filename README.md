@@ -78,12 +78,16 @@ Note how this compares to [the previous example](#sine-play). This shows how you
 
 <a name="stream-example"> </a>
 <a name="labels"> </a>
+<a name="amix"> </a>
 ## Combine two sine waves into a chord.
 ```bash
-ffplay -f lavfi 'sine=frequency=256:duration=10 [one]; sine=frequency=512:duration=5 [two]; [one][two]amix'
+ffplay -f lavfi 'sine=frequency=256:duration=10s [one]; sine=frequency=512:duration=5s [two]; [one][two]amix'
 ```
+Here we create two streams, `[one]` and `[two]` using the [sine filter (example)](#sine-play). We mix these together into the final output streamm using the [amix filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#amix). `amix` takes two streams as input and mixes them together into a single output.
 
-This creates two streams, `[one]` and `[two]` using the [sine filter (example)](#sine-play), which are then mixed together into the output stream by `amix`. `amix` which takes two streams as input and mixes them together.
+If you look at the entry for amix in [ffmpeg -filters](#list-filters) with `ffmpeg -filters | grep amix` you will see that it you will see that it is of type `N->A` meaning it takes a number of steams as input and writes them to a single audio stream.
+
+> **See also**: [ffplay vs ffmpeg (examples)](#ffmpeg), [Combing video streams (example)](#hstack)
 
 <a name="list"> </a>
 <a name="list-filters"> </a>
@@ -372,7 +376,7 @@ This example is similar to the [previous one](#command-example) but for an audio
 
 We create a square wave because these [has a lot of overtones (wiki)](https://en.wikipedia.org/wiki/Subtractive_synthesis), using the [aevalsrc filter (example)](#aevalsrc) with [an expression](#expression) that allows one to specific a formula, that we send through a bandpass filter. This waveform is then sent into [asendcmd (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) which has a command to change the frequency of the bandpass signal after two seconds.
 
-Unfortunately, FFmpeg requires you to use a different filter for sending commands to audio filters thsn video filters, so we use [asendcmd (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) rather than [sendcmd (example)](#command-example).
+Unfortunately, FFmpeg requires you to use a different filter for sending commands to audio filters than video filters, so we use [asendcmd (doc)](https://ffmpeg.org/ffmpeg-filters.html#sendcmd_002c-asendcmd) rather than [sendcmd (example)](#command-example).
 
 > **See also**: [Audio engineering](#audio)
 
@@ -457,6 +461,7 @@ ffmpeg -i warble.wav -i transition.webm combined.mp4
 ffplay combined.webm
 ```
 
+<a name="xstack"> </a>
 <a name="xstack-zero-index"> </a>
 ## Combine two videos with different sizes
 ```
@@ -609,13 +614,13 @@ ffmpeg -i  video.mp4 -vf 'realtime' -f xv ''
 
 The first example creates a stream counting up using [drawtext (example)](#drawtext). and then [sends this xv (example)](#xv). We specify `realtime` as the final filter to play at normal speed.
 
-> **See also**: [Play media with ffplay](#ffplay)
+> **See also**: [Play media with ffplay (example)](#ffplay)
 <a name="external"> </a>
 
 ## Playing videos on the terminal with kitty
 There [terminal emulator kitty](https://github.com/kovidgoyal/kitty) extended the the protocol that terminals used that it can render pixels. Some other terminal emulators have adopted this standard. You can use this to display the output from ffmpeg - including videos - directly in the terminal.
 
-This can be used to display images directly in the terminal. This is partly a cool trick - but it can have some benefits in terms of productivity and avoiding "paper cuts" while working because you does not have to move windows around. For many use cases one might prefer to use streaming to send output to a consistent window.
+This can be used to display images directly in the terminal. This is partly a neat trick - but it can have some benefits in terms of productivity and avoiding "paper cuts" while working because you does not have to move windows around. For many use cases one might prefer to use streaming to send output to a consistent window.
 
 The utility [timg](https://github.com/hzeller/timg) works well here.
 
@@ -626,7 +631,7 @@ kitty
 ffmpeg -loglevel 16 -filter_complex 'color=blue, drawtext=text=hi:x=w/3 + w/3*sin(t):y=h/3 + h/3*cos(t):fontsize=h/5' -f webm - | timg -V -
 ```
 
-First we install `timg` for play videos in a terminal and `kitty` for a terminal that supports images. We then creating an interesting video using ffmpeg to [render some text (example)](#text) which is animated using an [expression in time (example)](#time-expression) to [change the position of our text (example)](#positioning).
+First, we install `timg` for play videos in a terminal and `kitty` for a terminal that supports images. We then creating an interesting video using ffmpeg to [render some text (example)](#text) which is animated using an [expression in time (example)](#time-expression) to [change the position of our text (example)](#positioning).
 
 The output is written to [standard output](#programming), as specified by  `-`,  and then read from standard in by `timg`. Because there is no file name we must specify the format of the output stream using `-f`.  We use `-loglevel 16` to hide logging about FFmpeg's normal operation which would otherwise get in the way of the video playing in your terminal.
 
@@ -635,11 +640,11 @@ If you are using realtime outputs such as [X11 video output](#xv) or streaming i
 
 <a name="readability"> </a>
 # Writing more readable filters
-The readability of code can be a bit of a trade off. What is easier to read for an expert may use concepts that the new user finds difficult to grasp. Code has an audience like prose, and the features used should cater for this audience. There are various approaches to change how filters which may improve readability.
+The readability of code can be a bit of a trade off. What is easier to read for an expert may use concepts that the new user finds difficult to grasp. Code has an audience like prose, and the features used should cater for this audience. There are various approaches to change filters are written which may improve readability.
 
 <a name="hstack"> </a>
 ## Using source filters as input
-In some examples, we use complex filters with -`filter_complex` to support [source filters (example)](#source-filters). The output of source filters will often be [labelled (example)](#labels). You may be able to simplify such filters by moving parts of the filter out of the main filter and into an input source [of type lavfi (example)](#lavfi).
+In some examples, we use complex filters with `-filter_complex` to support [source filters (example)](#source-filters). The output of source filters will often be [labelled (example)](#labels). You may be able to simplify such filters by moving parts of the filter out of the main filter and into an input source [of type lavfi (example)](#lavfi).
 
 Here is an example:
 
@@ -648,6 +653,8 @@ ffmpeg -f lavfi -i 'color=red' -f lavfi -i 'color=green' -f lavfi -i 'color=blue
 ```
 
 This command uses [`-f lavfi` (example)](#lavfi) to create three inputs consisting of solid red, green, and blue. We then combine this three inputs together with [hstack](https://ffmpeg.org/ffmpeg-filters.html#hstack-1) to produce a "flag" video. The argument of `-filter_complex` is definitely shorter as a result.
+
+> **See also**: [Combining video streams of different size(example)](#xstack), Combining audio filters [simulateneous (example)](#amix), [sequentially (example)](#concat-stream)
 
 ## Creating a filter graph in a file
 With `-filter_complex_script`, you can read a filter specification ("filter graph") from a file. Sometimes command can be more readable it details are separated out into a file.
