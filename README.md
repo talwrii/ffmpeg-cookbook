@@ -87,7 +87,7 @@ Here we create two streams, `[one]` and `[two]` using the [sine filter (example)
 
 If you look at the entry for amix in [ffmpeg -filters](#list-filters) with `ffmpeg -filters | grep amix` you will see that it you will see that it is of type `N->A` meaning it takes a number of steams as input and writes them to a single audio stream.
 
-> **See also**: [ffplay vs ffmpeg (examples)](#ffmpeg), [Combing video streams (example)](#hstack)
+> **See also**: [ffplay vs ffmpeg (examples)](#ffplay), [Combing video streams (example)](#hstack)
 
 <a name="list"> </a>
 <a name="list-filters"> </a>
@@ -125,10 +125,15 @@ Unfortunately, some information about [filters (example)](#output-filter) such a
 ```bash
 ffmpeg -filter_complex `sine=frequency=512:duration=10` sine.wav
 ffmpeg -i sine.wav -af 'volume=volume=0.5' quiet-sine.wav
+ffplay sine.wav
 ffplay quiet-sine.wav
 ```
 
-This creates a file containing a sine wav and then use the `volume` filter to decrease the volume to 50% of the original volume. Because we are using a filter that has precisely one input and output, we can use `-af` rather than `-filter_complex`, but `-filter_complex` would still work.
+This creates a file containing a [sine wav (example)](#sine-play) and then uses the [`volume` filter](https://ffmpeg.org/ffmpeg-filters.html#volume) to decrease the volume to 50% of the original volume by using `volume=0.5`. Because we are using a filter that has precisely one input and output, we can use `-af` rather than `-filter_complex`, but `-filter_complex` would still work. We could use `-filter:a` instead of `-af` which is an identical option which may be easier to understand.
+
+We then [play the both the files](#play) the result wwith the ffplay program.
+
+> **See also:** [ffplay vs ffmpeg (examples)](#play)
 
 <a name="two-streams"> </a>
 <a name="concat"> </a>
@@ -284,6 +289,7 @@ ffmpeg -filter_complex  'color=color=white:duration=10s [one]; [one] drawtext=te
 ```
 
 <a name="trim"> </a>
+<a name="video-filter"> </a>
 ## Trim a video to five seconds
 ```bash
 ffmpeg -filter_complex 'color=color=white, drawtext=text=%{pts}, trim=duration=10s' count-to-ten.mp4
@@ -545,6 +551,7 @@ Some of the image based functionality which FFmpeg provides is analogous to the 
 In general, if you want to output an image you can [use the `-frames:v 1` option (example)](#frames) to extract and image.
 
 <a name="ts-frame"> </a>
+<a name="trim-start"> </a>
 ## Extract a frame from a video
 ```
 ffmpeg -filter_complex 'color=color=white, drawtext=text=%{pts}, trim=duration=10s' counting.mp4
@@ -690,8 +697,26 @@ color AVOptions:
    duration          <duration>   ..FV....... set video duration (default -0.000001)
    d                 <duration>   ..FV....... set video duration (default -0.000001)
    sar               <rational>   ..FV....... set video sample aspect ratio (from 0 to INT_MAX) (default 1/1)
-
 ```
+
+## Using short or long flags
+Many of the flags for FFmpeg can long and short versions. Using long versions may make is easier to work out what an option is doing from context. Using short options can make the option short and reduce unnecessary reading.
+
+`-filter:a` can be written as `-af` and creates an [audio filter](#audio-filter).
+`-filter:v` can be written as `-vf` and creates a [video filter](#video-filter).
+
+
+## Using flags or filters
+Some of the functionality of filters can be implemented instead as command-line flags.
+Using flags can pull complexity out of filters as a form of modularity. Converting flags into filters may result in a command that is easier to read for unfamiliar uses and more suitable for search. There may be features available for flags which are unavailable for features.
+
+`-ss` can be used to seek to a particular position to start with so that some material is skipped You can use the [`trim` filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#trim) instead of `-ss` with the [start option (example)](#trim-start).
+
+`-sseof` is analogus to `-ss` but skips material. Again the one can use the
+[`trim` filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#trim) instead of this with the end paramater.
+
+
+
 <a name="reflection"> </a>
 # Getting information about FFmpeg
 FFmpeg has various functions to provide documentation and information about how to run FFmpeg by calling FFmpeg itself.
