@@ -35,6 +35,7 @@ Once you have read this (or if you want to jump ahead) you might like to look at
 <a name="source"> </a>
 <a name="output-filter"> </a>
 <a name="output-stream"> </a>
+<a name="filter-complex"> </a>
 ## Create 10 seconds of silence
 ```bash
 ffmpeg -filter_complex 'anullsrc=duration=10s [out]' -map '[out]' -ac 1 silence.wav
@@ -43,7 +44,9 @@ You can play the silence you have created with `ffplay silence.wav`.
 
 This uses the [source filter (doc)](https://ffmpeg.org/ffmpeg-filters.html#toc-Filtering-Introduction), [anullsrc (doc)](https://ffmpeg.org/ffmpeg-filters.html#anullsrc) which generates ten seconds of silence (specified through the `duration` parameter) and then writes this to a stream labelled '[out]'. The `-map` command specifies stream labelled `[out]` is used in the output.
 
-You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 silence.wav` and an the output of the filter is implicitly used as the stream for output. But you cannot use `-af` because these filters must have precisely one input and one output and this has no input.
+You can also run this as: `ffmpeg -filter_complex 'anullsrc=duration=10s' -ac 1 silence.wav` and an the output of the filter is implicitly used as the stream for output.
+
+There are other ways to create filters such as [-af](#audio-filter) or [-vf](#video-filter) but both of these require precisely one input and one output. In general, you can also use [`-filter_complex`](#filter-complex) instead of these filters.
 
 <a name="play"> </a>
 <a name="sine-play"> </a>
@@ -131,9 +134,9 @@ ffplay quiet-sine.wav
 
 This creates a file containing a [sine wav (example)](#sine-play) and then uses the [`volume` filter](https://ffmpeg.org/ffmpeg-filters.html#volume) to decrease the volume to 50% of the original volume by using `volume=0.5`. Because we are using a filter that has precisely one input and output, we can use `-af` rather than `-filter_complex`, but `-filter_complex` would still work. We could use `-filter:a` instead of `-af` which is an identical option which may be easier to understand.
 
-We then [play the both the files](#play) the result wwith the ffplay program.
+We then [play both the files](#play) the result wwith the `ffplay` program.
 
-> **See also:** [ffplay vs ffmpeg (examples)](#play)
+> **See also:** [ffplay vs ffmpeg (example)](#play), [Video filters (example)](#video-filter)
 
 <a name="two-streams"> </a>
 <a name="concat"> </a>
@@ -297,6 +300,8 @@ ffmpeg -i count-to-ten.mp4 -vf 'trim=duration=5s' count-to-five.mp4
 ```
 
 First we create a video which shows the timestamp each frame and is ten seconds long. We then apply the `trim` filter to limit this to ten seconds.
+
+Here we can use the `-vf` because our filter has precisely one input and one output - but we could equally well use [-filter_complex (example)](#filter-complex) instead.
 
 <a name="static-image"> </a>
 ## Turn a static image into a five second video of the image
@@ -814,7 +819,7 @@ You can [show help for a filter](#filter-help) and [list as filters](#list-filte
 
 <a name="expressions-topic"> </a>
 # Expressions
-Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext (examples) has a different expression language](#drawtext) using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
+Some filters support [programmatic expression(doc)](https://ffmpeg.org/ffmpeg-utils.html#toc-Expression-Evaluation) in some of their parameters. Filters tend to decide for themselves how they handle expressions, for example [drawtext has a different expression language (example)](#drawtext) using a different syntax, but most of the time if a filter's parameter use expressions it is using this language - but with a different set of variables ([ex1](#variables-1), [ex2](#variables-2)).
 
 You can see the documentation for the shared parts of the expression language (such as functions) with [`man ffmpeg-utils`](#man-pages)
 
