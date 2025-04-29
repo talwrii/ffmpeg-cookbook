@@ -23,7 +23,7 @@ There are [various books](https://trac.ffmpeg.org/wiki/BooksAndOtherExternalReso
 
 The [FFmpeg wiki](https://trac.ffmpeg.org/) contains some examples particularly the [filtering section](https://trac.ffmpeg.org/#Filtering). You can also [ask questions on reddit](https://www.reddit.com/r/ffmpeg).
 
-What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking, tries to use an innovative approach to ordering of material. Focuses on examples that can be immediately run without material.
+What distinguishes this cookbook is that is is available for free, focuses on good internal and external linking, tries to use an innovative approach to ordering of material and focuses on examples that can be immediately run without any media.
 
 <a name="introduction"> </a>
 # Introduction: The core of FFmpeg
