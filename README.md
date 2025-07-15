@@ -7,7 +7,7 @@ I created this guide because I found working out how FFmpeg worked from snippets
 
 This guide provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html). I try to label links with `(example)` if they link to an earlier example of a feature or `(doc)` if they link to external documentation.
 
-> [!info] I wrote all of this if it seems intersting enough and you'd like to ask me some questions. Then I'm open to dong some [**FFmpeg tutoring**](https://readwithai.substack.com/p/online-ffmpeg-tutoring)
+>  *I wrote all of this if it seems intersting enough and you'd like to ask me some questions. Then I'm open to doing some [**FFmpeg tutoring**](https://readwithai.substack.com/p/online-ffmpeg-tutoring) on the topic. I could walk through these commands, or apply this approach to your problems.
 
 # Attribution
 Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in FFmpeg.
