@@ -1,11 +1,13 @@
 # A beginner's Cookbook for FFmpeg
-**@readwithai** - [**X**](https://x.com/readwithai) - [**blog**](https://readwithai.substack.com/) - [**FFmpeg tutoring**](https://readwithai.substack.com/p/online-ffmpeg-tutoring)
+**@readwithai** - [**X**](https://x.com/readwithai) - [**blog**](https://readwithai.substack.com/) -
 
 This is a beginner's cookbook for the audio-video command-line tool, [FFmpeg](https://www.ffmpeg.org/). It builds up the reader's knowledge of FFmpeg's features through examples, before providing more applied examples which link back to early examples to aid understanding and adaptation. You may now  want to jump to the [introduction](#introduction).
 
 I created this guide because I found working out how FFmpeg worked from snippets too difficult and needed to form an understanding from first principles. FFmpeg already has complete reference documentation, but this can be difficult to understanding. By adding concrete examples of features, these features become easier to understand, by giving the user something they can run they have something working that they can adapt, by linking to simpler examples the user can learn on the simple example sand then apply the more complicated features, by providing documentation that links to examples the user is given an opportunity to understand a feature through documentation and then continue.
 
 This guide provides is an [index of features](#features) which goes through different FFmpeg features linked to recipes. FFmpeg has more features than a cookbook can cover completely but provides the ability to [list filters](#list) and [display their parameters](#parameters) as well as providing [terse but useable reference documentation](https://ffmpeg.org/ffmpeg-filters.html). I try to label links with `(example)` if they link to an earlier example of a feature or `(doc)` if they link to external documentation.
+
+> [!info] I wrote all of this if it seems intersting enough and you'd like to ask me some questions. Then I'm open to dong some [**FFmpeg tutoring**](https://readwithai.substack.com/p/online-ffmpeg-tutoring)
 
 # Attribution
 Thanks to [Ventz Petkov](https://github.com/ventz) for providing me with [various additional recipes](https://github.com/talwrii/ffmpeg-cookbook/issues/1). This is particularly valuable as I am not (at the time of writing) an expert in FFmpeg.
